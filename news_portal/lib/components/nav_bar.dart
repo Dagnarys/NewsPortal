@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class NavBar extends StatelessWidget {
-  final String role = 'moderator';
+  final String role = 'user';
   const NavBar({super.key});
   @override
   Widget build(BuildContext context) {
@@ -17,6 +17,12 @@ class NavBar extends StatelessWidget {
                   width: 74,
                   height: 650,
                   decoration: const BoxDecoration(
+                      boxShadow: [BoxShadow(
+                        color: Colors.black, // Цвет тени с прозрачностью
+                        spreadRadius: 2, // Радиус размытия
+                        blurRadius: 10, // Радиус тени
+                        offset: Offset(4, 4), // Смещение тени по x и y
+                      )],
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(32))),
                   child: Column(
@@ -48,6 +54,11 @@ class NavBar extends StatelessWidget {
                 width: role == 'user' ? 175 : 135,
                 height: 58,
                 decoration: const BoxDecoration(
+                    boxShadow: [BoxShadow(
+                        color: Color.fromARGB(75, 0, 0, 0), // Цвет тени с прозрачностью
+                        blurRadius: 11, // Радиус тени
+                        offset: Offset(0, 4), // Смещение тени по x и y
+                      )],
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(32))),
                 child: Row(
