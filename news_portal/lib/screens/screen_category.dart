@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_portal/components/nav_bar.dart';
 import 'package:news_portal/components/top_bar.dart';
 
 class ScreenCategory extends StatelessWidget {
@@ -7,15 +8,14 @@ class ScreenCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Container(
-
-      child: const Column(
+      color: Colors.white,
+      child:  Column(
         children: [
           TopBar(),
+          Expanded(child: Container()),
+          NavBar()
         ]
-        
-
       ),
-
     );
   }
 }
