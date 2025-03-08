@@ -15,10 +15,11 @@ class MainScreen extends StatelessWidget {
           //верхняя панель
           const TopBar(),
           //пространство между верхней панелью и панелью с категориями
-          
-          SizedBox(height: 5,),
+
+          const SizedBox(height: 5,),
           // панель с категорями 
-          CategoryBar(),
+          const CategoryBar(),
+          
           //пространство для заполнения карточек с новостью
           Expanded(child: Container()),
           //нижняя панель навигации
