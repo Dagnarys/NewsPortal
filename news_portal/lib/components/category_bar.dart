@@ -13,14 +13,7 @@ class CategoryBar extends StatelessWidget {
     return Container(
       width: 348,
       height: 24,
-      //ниже обводка бара с категориями
-      // decoration:  BoxDecoration(
-      //   border: Border.all(
-      //     // color: Colors.red,
-      //     // width: 2,
-      //   )
-      // ),
-      child: Row(
+      child:  Row(
         children: [
           //пару чипсов, переход фильтрация по категории
           const ChipsButton(),
@@ -47,29 +40,37 @@ class CategoryButton extends StatelessWidget {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const ScreenCategory()));
         },
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+          
+          ),
         child: Container(
-          alignment: Alignment.center,
           width: 58,
-          height: 18,
-          child: Row(
+
+          child:  Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+        
               ShaderMask(
                 shaderCallback: (bounds) => AppColors.primaryGradient.createShader(bounds),
                 child: Text(
                   'все #',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Colors.white,
+                  style: TextStyle(                     
                       fontFamily: AppFonts.nunitoFontFamily,
                       fontSize: 14,
                       fontWeight: FontWeight.w400),
                 ),
               ),
-              
+
               SvgPicture.asset('assets/svg/arrow_category.svg',width: 10,height: 12,),
             ],
           ),
+
+          
         ));
   }
 }
+
+
+            
