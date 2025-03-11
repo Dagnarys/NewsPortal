@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_portal/const/colors.dart';
 import 'package:news_portal/fonts/fonts.dart';
-import 'package:news_portal/screens/screen_category.dart';
 
 class ChipsButton extends StatelessWidget {
   const ChipsButton({super.key});
@@ -14,7 +13,6 @@ class ChipsButton extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
       child: TextButton(
         onPressed: () {
-          
         },
         style: TextButton.styleFrom(
           padding: const EdgeInsets.all(0), // Убираем стандартный padding
