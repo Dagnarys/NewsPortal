@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_portal/components/list_category.dart';
 import 'package:news_portal/components/nav_bar.dart';
 import 'package:news_portal/components/top_bar.dart';
 
@@ -12,6 +13,7 @@ class ScreenCategory extends StatelessWidget {
       child:  Column(
         children: [
           TopBar(),
+          ListCategory(),
           Expanded(child: Container()),
           NavBar()
         ]
