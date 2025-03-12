@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "657194578963",
+    "project_id": "newsportal-3c06e",
+    "storage_bucket": "newsportal-3c06e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657194578963:android:75400412bf6af2d49efbe6",
+        "android_client_info": {
+          "package_name": "com.example.news_portal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJuNZgiHyId-fuYBzng9BQZmDg0wC6dKg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
