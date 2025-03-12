@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:news_portal/components/chips_button.dart';
 import 'package:news_portal/const/colors.dart';
+import 'package:news_portal/models/model_categories.dart';
+import 'package:news_portal/repositories/categories.dart';
 
 class ListCategory extends StatelessWidget {
   const ListCategory({super.key});
@@ -26,16 +28,47 @@ class ListCategory extends StatelessWidget {
     );
   }
 }
-
-class ChipsList extends StatelessWidget {
+class ChipsList extends StatefulWidget {
   const ChipsList({super.key});
 
   @override
+  State<ChipsList> createState() => _ChipsListState();
+}
+
+class _ChipsListState extends State<ChipsList> {
+  final CategoriesRepository _repository = CategoriesRepository();
+
+  @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8.0,
-      runSpacing: 4.0,
-      children: List<Widget>.generate(20, (index) => ChipsButton()),
+    return StreamBuilder<List<Category>>(
+      stream: _repository.getCategories(),
+      builder: (context, snapshot) {
+        //проверка на ожидание,если ждем показываем иконку загрузки
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        //проверка на загрузку данных
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('Ошибка: ${snapshot.error}'),
+          );
+        }
+
+        final categories = snapshot.data ?? [];
+        //если в бд категорий нет
+        if (categories.isEmpty) {
+          return const Center(child: Text('Категорий нет'));
+        }
+
+        return Wrap(
+          spacing: 8,
+          runSpacing: 4.0,
+          //превращаем категории в лист чипсов
+          children: categories.map((category) {
+            return ChipsButton(label: category.name);
+          }).toList(),
+        );
+      },
     );
   }
 }
