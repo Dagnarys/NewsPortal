@@ -1,24 +1,65 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:news_portal/components/chips_button.dart';
 import 'package:news_portal/const/colors.dart';
 import 'package:news_portal/fonts/fonts.dart';
+import 'package:news_portal/models/model_categories.dart';
+import 'package:news_portal/repositories/categories.dart';
 import 'package:news_portal/screens/screen_category.dart';
 
-class CategoryBar extends StatelessWidget {
+class CategoryBar extends StatefulWidget {
   const CategoryBar({super.key});
+
+  @override
+  State<CategoryBar> createState() => _CategoryBarState();
+}
+
+class _CategoryBarState extends State<CategoryBar> {
+  final CategoriesRepository _repository = CategoriesRepository();
+  List<Category> _allCategories = [];
+  List<Category> _randomCategories = [];
+
+ @override
+  void initState() {
+    super.initState();
+    _repository.getCategories().listen((categories) {
+      setState(() {
+        _allCategories = categories;
+        _randomCategories = _getUniqueRandomCategories(2);
+      });
+    });
+  }
+  
+
+  List<Category> _getUniqueRandomCategories(int count) {
+    if (_allCategories.isEmpty) return [];
+
+    final random = Random();
+    final shuffledCategories = List.of(_allCategories)..shuffle();
+
+    return shuffledCategories.take(count).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 348,
       height: 24,
-      child:  Row(
+      child: Row(
         children: [
-          //пару чипсов, переход фильтрация по категории
-          const ChipsButton(),
-          const ChipsButton(),
-          const ChipsButton(),
+          // Случайные категории
+          if (_randomCategories.isNotEmpty)
+            ..._randomCategories.map((category) => Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: ChipsButton(
+                    label: category.name,
+                    onPressed: () {
+                      // Здесь позже будет фильтрация новостей
+                    },
+                  ),
+                )),
           Expanded(
             child: Container(),
           ),
@@ -29,7 +70,6 @@ class CategoryBar extends StatelessWidget {
     );
   }
 }
-
 class CategoryButton extends StatelessWidget {
   const CategoryButton({super.key});
 
