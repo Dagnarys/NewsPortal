@@ -4,7 +4,11 @@ import 'package:news_portal/const/colors.dart';
 import 'package:news_portal/fonts/fonts.dart';
 
 class ChipsButton extends StatelessWidget {
-  const ChipsButton({super.key});
+
+  final String label;
+  final VoidCallback? onPressed;
+
+  const ChipsButton({super.key, required this.label, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +16,10 @@ class ChipsButton extends StatelessWidget {
       height: 26,
       padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
       child: TextButton(
-        onPressed: () {
+        onPressed: onPressed ??() {
         },
         style: TextButton.styleFrom(
+          minimumSize: Size(double.minPositive,double.minPositive),
           padding: const EdgeInsets.all(0), // Убираем стандартный padding
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -24,7 +29,7 @@ class ChipsButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.fromLTRB(3, 1, 3, 2),
           child: Text(
-            '#студентам',
+            '#$label',
             style: TextStyle(
               fontFamily: AppFonts.nunitoFontFamily,
               color: Colors.black,
