@@ -11,10 +11,13 @@ class CategoriesRepository {
   }
 
   Future<void> addCategory(String name) async {
-    await _firestore.collection('categories').add({
-      'name': name,
-      'createdAt': FieldValue.serverTimestamp(),
-    });
+    try {
+      await _firestore.collection('categories').add({
+        'name': name,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Error adding category: $e');
+    }
   }
-  
 }
