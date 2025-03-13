@@ -8,24 +8,26 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          //верхняя панель
-          const TopBar(),
-          //пространство между верхней панелью и панелью с категориями
-
-          const SizedBox(height: 5,),
-          // панель с категорями 
-          const CategoryBar(),
-          
-          //пространство для заполнения карточек с новостью
-          Expanded(child: Container()),
-          //нижняя панель навигации
-          const NavBar(),
-
-        ],
+    return  Scaffold(
+      body:  Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            //верхняя панель
+            const TopBar(),
+            //пространство между верхней панелью и панелью с категориями
+      
+            const SizedBox(height: 5,),
+            // панель с категорями 
+            const CategoryBar(),
+            
+            //пространство для заполнения карточек с новостью
+            Expanded(child: Container()),
+            //нижняя панель навигации
+            const NavBar(),
+      
+          ],
+        ),
       ),
     );
   }
