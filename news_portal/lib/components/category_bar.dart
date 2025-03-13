@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,14 +16,14 @@ class CategoryBar extends StatefulWidget {
 }
 
 class _CategoryBarState extends State<CategoryBar> {
-  final CategoriesRepository _repository = CategoriesRepository();
+  final CategoriesRepository _repositoryCategory = CategoriesRepository();
   List<Category> _allCategories = [];
   List<Category> _randomCategories = [];
 
  @override
   void initState() {
     super.initState();
-    _repository.getCategories().listen((categories) {
+    _repositoryCategory.getCategories().listen((categories) {
       setState(() {
         _allCategories = categories;
         _randomCategories = _getUniqueRandomCategories(2);
@@ -35,8 +34,6 @@ class _CategoryBarState extends State<CategoryBar> {
 
   List<Category> _getUniqueRandomCategories(int count) {
     if (_allCategories.isEmpty) return [];
-
-    final random = Random();
     final shuffledCategories = List.of(_allCategories)..shuffle();
 
     return shuffledCategories.take(count).toList();
@@ -45,15 +42,16 @@ class _CategoryBarState extends State<CategoryBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 348,
+      width: 380,
       height: 24,
       child: Row(
         children: [
           // Случайные категории
           if (_randomCategories.isNotEmpty)
             ..._randomCategories.map((category) => Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
+                  padding: const EdgeInsets.only(right: 0),
                   child: ChipsButton(
+                    fontSize: 14,
                     label: category.name,
                     onPressed: () {
                       // Здесь позже будет фильтрация новостей
