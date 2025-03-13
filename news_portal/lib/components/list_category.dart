@@ -62,10 +62,10 @@ class _ChipsListState extends State<ChipsList> {
 
         return Wrap(
           spacing: 8,
-          runSpacing: 4.0,
+          runSpacing: 8.0,
           //превращаем категории в лист чипсов
           children: categories.map((category) {
-            return ChipsButton(label: category.name);
+            return ChipsButton(label: category.name,fontSize: 18,);
           }).toList(),
         );
       },
