@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:news_portal/components/chips_button.dart';
@@ -20,7 +19,7 @@ class _CategoryBarState extends State<CategoryBar> {
   List<Category> _allCategories = [];
   List<Category> _randomCategories = [];
 
- @override
+  @override
   void initState() {
     super.initState();
     _repositoryCategory.getCategories().listen((categories) {
@@ -30,7 +29,6 @@ class _CategoryBarState extends State<CategoryBar> {
       });
     });
   }
-  
 
   List<Category> _getUniqueRandomCategories(int count) {
     if (_allCategories.isEmpty) return [];
@@ -68,6 +66,7 @@ class _CategoryBarState extends State<CategoryBar> {
     );
   }
 }
+
 class CategoryButton extends StatelessWidget {
   const CategoryButton({super.key});
 
@@ -80,35 +79,31 @@ class CategoryButton extends StatelessWidget {
         },
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
-          
-          ),
+        ),
         child: Container(
           width: 58,
-
-          child:  Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-        
               ShaderMask(
-                shaderCallback: (bounds) => AppColors.primaryGradient.createShader(bounds),
+                shaderCallback: (bounds) =>
+                    AppColors.primaryGradient.createShader(bounds),
                 child: Text(
                   'все #',
-                  style: TextStyle(                     
+                  style: TextStyle(
                       fontFamily: AppFonts.nunitoFontFamily,
                       fontSize: 14,
                       fontWeight: FontWeight.w400),
                 ),
               ),
-
-              SvgPicture.asset('assets/svg/arrow_category.svg',width: 10,height: 12,),
+              SvgPicture.asset(
+                'assets/svg/arrow_category.svg',
+                width: 10,
+                height: 12,
+              ),
             ],
           ),
-
-          
         ));
   }
 }
-
-
-            
