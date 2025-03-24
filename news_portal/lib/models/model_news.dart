@@ -7,12 +7,14 @@ class News {
   final String title;
   final String content;
   final String categoryId; // Связь с категорией
+  final String imageUrl;
 
   News({
     required this.id,
     required this.title,
     required this.content,
     required this.categoryId, // Добавляем categoryId
+    required this.imageUrl,
   });
 
   factory News.fromFirestore(DocumentSnapshot doc) {
@@ -22,6 +24,7 @@ class News {
       title: data['title'] ?? 'No Title',
       content: data['content'] ?? 'No Content',
       categoryId: data['id_category'] ?? '', // Получаем categoryId из Firestore
+      imageUrl: data['image_url']?? '',
     );
   }
   Future<String> getCategoryName(CategoriesRepository categoryRepo) async {
