@@ -8,7 +8,8 @@ import 'package:news_portal/repositories/news.dart';
 
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
+  final String? selectedCategoryId;
+  const MainScreen({super.key, this.selectedCategoryId});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,26 @@ class MainScreen extends StatelessWidget {
               const SizedBox(
                 height: 0,
               ),
-               NewsStream(repositoryNews: repositoryNews)
+              // Обертка для обновления при свайпе
+              Expanded(
+                  child: RefreshIndicator(
+                     onRefresh: () async {
+                      // Сбрасываем категорию (опционально)
+                      if (selectedCategoryId != null) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => MainScreen()),
+                        );
+                      }
+                      // Обновляем данные
+                      await repositoryNews.refreshData();
+                    },
+                    child: NewsStream(
+                      repositoryNews: repositoryNews,
+                      selectedCategoryId: selectedCategoryId,
+                    ),
+                  ),
+                ),
     
               //пространство для заполнения карточек с новостью
               //нижняя панель навигации
