@@ -20,17 +20,37 @@ class CategoriesRepository {
       print('Error adding category: $e');
     }
   }
-  Future<Category?> getCategory(String categoryId) async {
-    if (categoryId.isEmpty) return null; // Если categoryId пустой, возвращаем null
+
+  // Метод для получения категории по ID
+  Future<Category?> getCategory(String id) async {
     try {
-      final categoryDoc =
-          await FirebaseFirestore.instance.collection('categories').doc(categoryId).get();
-      if (categoryDoc.exists) {
-        return Category.fromFirestore(categoryDoc);
+      final doc = await _firestore.collection('categories').doc(id).get();
+      if (doc.exists) {
+        return Category.fromFirestore(doc);
       }
-      return null; // Если категория не найдена
+      return null;
     } catch (e) {
       print('Ошибка при загрузке категории: $e');
+      return null;
+    }
+  }
+
+  // Метод для получения категории по имени
+  Future<Category?> getCategoryByName(String name) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('categories')
+          .where('name', isEqualTo: name)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final doc = querySnapshot.docs.first;
+        return Category.fromFirestore(doc);
+      }
+      return null;
+    } catch (e) {
+      print('Ошибка при поиске категории по имени: $e');
       return null;
     }
   }
