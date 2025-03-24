@@ -51,9 +51,6 @@ class _CategoryBarState extends State<CategoryBar> {
                   child: ChipsButton(
                     fontSize: 14,
                     label: category.name,
-                    onPressed: () {
-                      // Здесь позже будет фильтрация новостей
-                    },
                   ),
                 )),
           Expanded(
