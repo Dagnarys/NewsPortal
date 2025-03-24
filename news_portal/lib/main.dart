@@ -1,7 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:news_portal/firebase_options.dart';
+import 'package:news_portal/providers/category_provider.dart';
+import 'package:news_portal/repositories/categories.dart';
 import 'package:news_portal/screens/screen_news_main.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +16,12 @@ void main() async {
   } catch (e) {
     print('Error initializing Firebase: $e');
   }
-  runApp(const MyApp());
+  runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CategoryProvider(CategoriesRepository())),
+      ],
+      child: MyApp(),
+    ),);
 }
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
