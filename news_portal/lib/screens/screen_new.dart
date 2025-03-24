@@ -5,9 +5,13 @@ import 'package:news_portal/repositories/news.dart';
 class ScreenNew extends StatelessWidget {
   final String newsId;
   final NewsRepository repositoryNews = NewsRepository();
+  final String title;
+  final String content;
   ScreenNew({
     super.key,
     required this.newsId,
+    required this.content,
+    required this.title,
   });
 
   @override
@@ -30,8 +34,8 @@ class ScreenNew extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Инженер – это множественное число',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    title,
+                    style: null,
                   ),
                   SizedBox(height: 8),
                   Text(
@@ -54,17 +58,7 @@ class ScreenNew extends StatelessWidget {
                   ),
                   SizedBox(height: 16),
                   Text(
-                    'Дискуссия «Университеты: как раскрыть потенциал обучающихся в эпоху технологий» состоялась 25 октября на площадке СберУниверситета. Участники обсудили, как готовить выпускников, способных управлять технологиями на благо, что ещё критически важно в образе их создателя, как эффективнее реализовать новые смыслы в образовательных программах. В обсуждении принял участие проректор по науке и цифровому развитию МГТУ им. Н.Э. Баумана Павел Дроговоз. Модератором дискуссии выступил руководитель центра по работе с вузами и академическим сообществом СберУниверситета Дмитрий Коваленко.',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Как известно, высшая школа играет важнейшую роль в формировании собственного Я, закладывает фундамент дальнейшего образования и постоянного стремления к саморазвитию, самосовершенствованию. В своём выступлении Павел Дроговоз говорил о том, как в Бауманском университете смотрят на будущее и воспитывают инженеров, которым и предстоит его создавать своими руками.',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    '«Для нас будущее уже наступило, — полушутя отметил проректор. — 2030 год для нас уже реален: мы набрали тех, кто выйдет в индустрию в тридцатом году».',
+                    content,
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 16),
