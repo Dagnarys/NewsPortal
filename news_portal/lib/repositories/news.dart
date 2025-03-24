@@ -17,4 +17,5 @@ class NewsRepository {
       throw Exception('Новость с ID $id не найдена');
     }
   }
+   
 }
