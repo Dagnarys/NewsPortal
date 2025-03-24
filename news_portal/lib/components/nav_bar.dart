@@ -1,9 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 
-class NavBar extends StatelessWidget {
-  final String role = 'user';
+class NavBar extends StatefulWidget {
+
   const NavBar({super.key});
+
+  @override
+  State<NavBar> createState() => _NavBarState();
+}
+
+class _NavBarState extends State<NavBar> {
+  final String role = 'user';
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -71,9 +82,16 @@ class NavBar extends StatelessWidget {
                               icon: SvgPicture.asset('assets/svg/news.svg'),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: _pickImageFromGallery,
                               icon: SvgPicture.asset('assets/svg/add.svg'),
                             ),
+                            if (_selectedImage != null)
+                              Image.file(
+                                _selectedImage!,
+                                height: 200,
+                                width: 200,
+                                fit: BoxFit.cover,
+                              ),
                             IconButton(
                               onPressed: () {},
                               icon: SvgPicture.asset('assets/svg/profile.svg'),
@@ -94,5 +112,16 @@ class NavBar extends StatelessWidget {
           )
       ],
     );
+  }
+  File? _selectedImage; // Переменная для хранения выбранного изображения
+  Future<void> _pickImageFromGallery() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path); // Сохраняем выбранный файл
+      });
+    }
   }
 }
