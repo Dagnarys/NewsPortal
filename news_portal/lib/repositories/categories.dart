@@ -20,4 +20,18 @@ class CategoriesRepository {
       print('Error adding category: $e');
     }
   }
+  Future<Category?> getCategory(String categoryId) async {
+    if (categoryId.isEmpty) return null; // Если categoryId пустой, возвращаем null
+    try {
+      final categoryDoc =
+          await FirebaseFirestore.instance.collection('categories').doc(categoryId).get();
+      if (categoryDoc.exists) {
+        return Category.fromFirestore(categoryDoc);
+      }
+      return null; // Если категория не найдена
+    } catch (e) {
+      print('Ошибка при загрузке категории: $e');
+      return null;
+    }
+  }
 }
