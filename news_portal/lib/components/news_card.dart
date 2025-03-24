@@ -5,9 +5,10 @@ import 'package:news_portal/screens/screen_new.dart';
 
 class NewsCard extends StatelessWidget {
   final String title;
-  final String text;
+  final String content;
   final String newsId;
-  const NewsCard({super.key, required this.title, required this.text , required this.newsId,});
+  final String name_category;
+  const NewsCard({super.key, required this.title, required this.content , required this.newsId,required this.name_category});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,9 @@ class NewsCard extends StatelessWidget {
               ),
               SizedBox(height: 26,),
               Text(
-                text,
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+                content,
                 style: TextStyle(
                 fontSize: 12,
                 fontFamily: AppFonts.nunitoFontFamily,
@@ -54,7 +57,7 @@ class NewsCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                  '#категория #категория',
+                  name_category,
                   style: TextStyle(
                   fontSize: 12,
                   fontFamily: AppFonts.nunitoFontFamily,
