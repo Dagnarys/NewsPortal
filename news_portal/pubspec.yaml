@@ -43,6 +43,7 @@ dependencies:
   cloud_firestore: ^5.6.5
   provider: ^6.1.2
   image_picker: ^1.1.2
+  galleryimage: ^2.0.1
 
 dev_dependencies:
   flutter_test:
