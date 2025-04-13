@@ -31,6 +31,7 @@ class NewsCard extends StatelessWidget {
                         newsId: newsId,
                         content: content,
                         title: title,
+                        image: imageUrl,
                       )));
         },
         child: Container(
