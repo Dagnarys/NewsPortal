@@ -8,7 +8,8 @@
             "name": "news_portal",
             "cwd": "news_portal",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "args": ["--observatory-port=8080"]
         },
         {
             "name": "news_portal (profile mode)",
