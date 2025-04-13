@@ -13,7 +13,7 @@ class TopBar extends StatelessWidget {
       padding: const EdgeInsets.only(top: 50),
       child: Align(
         child: Container(
-          color: Colors.white,
+          // color: Colors.white,
           width: 345,
           height: 40,
           
