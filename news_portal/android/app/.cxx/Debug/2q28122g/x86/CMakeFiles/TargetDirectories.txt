@@ -1,0 +1,2 @@
+/home/dagnarys/Документы/GitHub/NewsPortal/news_portal/android/app/.cxx/Debug/2q28122g/x86/CMakeFiles/edit_cache.dir
+/home/dagnarys/Документы/GitHub/NewsPortal/news_portal/android/app/.cxx/Debug/2q28122g/x86/CMakeFiles/rebuild_cache.dir

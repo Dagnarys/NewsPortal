@@ -1,0 +1,1 @@
+/home/dagnarys/Документы/GitHub/NewsPortal/news_portal/build/app/intermediates/cxx/Debug/2q28122g/obj/x86_64

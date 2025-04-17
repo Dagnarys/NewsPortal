@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/home/dagnarys/flutter/flutter_linux_3.24.3-stable/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/dagnarys/Android/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/home/dagnarys/Документы/GitHub/NewsPortal/news_portal/android/app/.cxx/Debug/2q28122g/x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/dagnarys/Android/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/home/dagnarys/Документы/GitHub/NewsPortal/news_portal/android/app/.cxx/Debug/2q28122g/x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}
