@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:news_portal/firebase_options.dart';
 import 'package:news_portal/providers/category_provider.dart';
+import 'package:news_portal/providers/user_provider.dart';
 import 'package:news_portal/repositories/categories.dart';
 import 'package:news_portal/screens/screen_news_main.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ void main() async {
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CategoryProvider(CategoriesRepository())),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: MyApp(),
     ),);
