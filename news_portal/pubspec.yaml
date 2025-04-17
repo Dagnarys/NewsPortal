@@ -44,6 +44,7 @@ dependencies:
   provider: ^6.1.2
   image_picker: ^1.1.2
   galleryimage: ^2.0.1
+  firebase_auth: ^5.5.2
 
 dev_dependencies:
   flutter_test:
