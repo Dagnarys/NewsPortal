@@ -15,6 +15,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final NewsRepository repositoryNews = NewsRepository();
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: 
       Stack(children: [
         Container(
