@@ -20,7 +20,11 @@ void main() async {
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CategoryProvider(CategoriesRepository())),
-        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) {
+          final provider = UserProvider();
+          provider.loadCurrentUser(); // Загружаем данные текущего пользователя
+          return provider;
+        }),
       ],
       child: MyApp(),
     ),);
