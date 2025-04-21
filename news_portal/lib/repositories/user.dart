@@ -9,13 +9,16 @@ class UserRepository {
   Future<UserCredential> signInWithEmailAndPassword(String email, String password) async {
     try {
       return await _auth.signInWithEmailAndPassword(email: email, password: password);
+
+          // Получаем ID пользователя
+
     } catch (e) {
       throw Exception('Ошибка входа: $e');
     }
   }
 
   // Регистрация нового пользователя
-  Future<void> registerWithEmailAndPassword(String email, String password) async {
+  Future<void> registerWithEmailAndPassword(String email, String password, String name, String surname, String phoneNumber) async {
     try {
       // Регистрация пользователя через Firebase Authentication
       final UserCredential userCredential =
@@ -24,6 +27,9 @@ class UserRepository {
       // Сохранение данных пользователя в Firestore
       await _firestore.collection('users').doc(userCredential.user!.uid).set({
         'email': email,
+        'name':name,
+        'surname':surname,
+        'phone_number':phoneNumber,
         'role': 'user', // По умолчанию роль 'user'
       });
     } catch (e) {
@@ -65,5 +71,18 @@ class UserRepository {
       throw Exception('Ошибка получения роли: $e');
     }
   }
-  
+Future<Map<String, dynamic>?> getUserDetails(String id) async {
+  try {
+    final doc = await _firestore.collection('users').doc(id).get();
+    if (doc.exists) {
+      final userData = doc.data() as Map<String, dynamic>;
+
+      return userData;
+    } else {
+      return null; // Если пользователь не найден
+    }
+  } catch (e) {
+    throw Exception('Ошибка при получении данных пользователя: $e');
+  }
+}
 }
