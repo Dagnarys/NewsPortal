@@ -45,6 +45,8 @@ dependencies:
   image_picker: ^1.1.2
   galleryimage: ^2.0.1
   firebase_auth: ^5.5.2
+  intl_phone_number_input: ^0.7.4
+  ru_phone_formatter: ^1.0.1
 
 dev_dependencies:
   flutter_test:
