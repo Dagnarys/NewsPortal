@@ -49,97 +49,128 @@ class _ScreenNewState extends State<ScreenNew> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
-          CustomScrollView(
-            scrollBehavior: ScrollBehavior(),
-            controller: _scrollController,
-            slivers: [
-              SliverAppBar(
-                pinned: true,
-                automaticallyImplyLeading: false,
-                toolbarHeight: 0,
-                collapsedHeight: 0,
-                expandedHeight: 250.0,
-                flexibleSpace:  Image.network(widget.image, fit: BoxFit.cover),
-              ),
-          
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                    color: Colors.black,
-                    child: Center(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 16,horizontal: 6),
-                        alignment:AlignmentDirectional.centerStart,
-                        width: 311,
-                        height: 109,
-                        decoration: BoxDecoration(
-                          
-                          color: Colors.amber
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            
-                            Text(
-                              '25 октября 2024',
-                              style: TextStyle(fontSize: 12, color: Colors.grey),
-                            ),
-                            const SizedBox(height: 3),
-                            Text(
-                              widget.title,
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            const SizedBox(height: 3),
-                            Text(
-                              'Автор текста: Марина Ткачева',
-                              style: TextStyle(fontSize: 10, color: Colors.grey),
-                            ),
-                            const SizedBox(height: 3),
-                            Row(
-                              children: [
-                                Text(
-                                  '#категория #категория',
-                                  style: TextStyle(fontSize: 10, color: Colors.grey),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  '© 1234',
-                                  style: TextStyle(fontSize: 10, color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    ),
-                    Container(                        
-                      child: Text(
-                        widget.content,
-                        style: const TextStyle(fontSize: 16),
-                                        ),
-                    ),
-                  ],
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Column(children: [
-                 
-                      const SizedBox(height: 16),
-                      const CarouselImages(),
-                ],),
-              )
-            ],
-          ),
           Positioned(
             top: 0,
             left:0,
             right: 0,
-            child: TopBar(),),
+            child: Image.network(widget.image, fit: BoxFit.cover, width: 383, height: 261,),),
+          
+          CustomScrollView(
+            scrollBehavior: ScrollBehavior(),
+            controller: _scrollController,
+            slivers: [    
+                        SliverAppBar(
+                pinned: true,
+                toolbarHeight: 40,
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                flexibleSpace: const TopBar(),
+                titleSpacing: 0,
+                centerTitle: false,
+                excludeHeaderSemantics: true,
+                title: const SizedBox.shrink(),
+                leading: const SizedBox.shrink(),
+                actions: const [],
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: EdgeInsets.only(top: 135),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Stack(children: [
+                        Container(   
+                          
+                          margin: EdgeInsets.only(top: 25),
+                          padding: EdgeInsets.only(top: 90,right: 4,left: 4) ,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                            color: Colors.white,
+                          ),
+                        child: Text(
+                          
+                          widget.content,
+                          style: const TextStyle(fontSize: 16),
+                                          ),
+                      ),
+                        Center(
+                        
+                          child: Container(
+                            
+                            padding: EdgeInsets.symmetric(vertical: 16,horizontal: 6),
+                            alignment:AlignmentDirectional.centerStart,
+                            width: 311,
+                            height: 109,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(16)),
+                              color: Color.fromRGBO(214, 212, 212, 0.979)
+                            ),
+                            child: Container(
+                              
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  
+                                  Text(
+                                    '25 октября 2024',
+                                    style: TextStyle(fontSize: 12, color: Color(0xFF2E0505)),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    widget.title,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Color(0xFF2E0505)),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    'Автор текста: Марина Ткачева',
+                                    style: TextStyle(fontSize: 10,fontWeight: FontWeight.w600, color: Color(0xFF2E0505)),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '#категория',
+                                        style: TextStyle(fontSize: 10, color: Color(0xFF2E0505)),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '© 1234',
+                                        style: TextStyle(fontSize: 10, color: Color(0xFF2E0505)),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      
+                      
+
+                      ],)
+                      
+                      
+                    ],
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  color: Colors.white,
+                  child: Column(children: [
+                   
+                        const SizedBox(height: 16),
+                        const CarouselImages(),
+                        const SizedBox(height: 35),
+                  ],),
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );
