@@ -41,6 +41,7 @@ class _CarouselImagesState extends State<CarouselImages> {
       children: [
         Center(
           child: Container(
+            color: Colors.white,
             width: 350,
             height: 183,
             child: PageView.builder(
