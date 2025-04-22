@@ -24,7 +24,6 @@ class ScreenNew extends StatefulWidget {
 
 class _ScreenNewState extends State<ScreenNew> {
   final ScrollController _scrollController = ScrollController();
-  bool _showCollapsedTitle = false;
 
   @override
   void initState() {
@@ -33,9 +32,7 @@ class _ScreenNewState extends State<ScreenNew> {
   }
 
   void _handleScroll() {
-    final offset = _scrollController.offset;
     setState(() {
-      _showCollapsedTitle = offset > 100;
     });
   }
 

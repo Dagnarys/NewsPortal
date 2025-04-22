@@ -4,7 +4,6 @@ import 'package:news_portal/providers/user_provider.dart';
 import 'package:news_portal/screens/screen_auth.dart';
 import 'package:news_portal/screens/screen_news_main.dart';
 import 'package:news_portal/screens/screen_profile.dart';
-import 'package:news_portal/screens/screen_regisrty.dart';
 import 'package:provider/provider.dart';
 
 class NavBar extends StatefulWidget {
