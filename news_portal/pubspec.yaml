@@ -47,6 +47,7 @@ dependencies:
   firebase_auth: ^5.5.2
   intl_phone_number_input: ^0.7.4
   ru_phone_formatter: ^1.0.1
+  firebase_storage: ^12.4.5
 
 dev_dependencies:
   flutter_test:
