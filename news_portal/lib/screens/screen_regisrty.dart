@@ -7,17 +7,27 @@ import 'package:news_portal/repositories/user.dart';
 import 'package:news_portal/screens/screen_auth.dart';
 import 'package:ru_phone_formatter/ru_phone_formatter.dart';
 
-class ScreenRegistry extends StatelessWidget {
+class ScreenRegistry extends StatefulWidget {
+  @override
+  State<ScreenRegistry> createState() => _ScreenRegistryState();
+}
+
+class _ScreenRegistryState extends State<ScreenRegistry> {
   final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
+
   final TextEditingController _nameController = TextEditingController();
+
   final TextEditingController _surnameController = TextEditingController();
+
   final TextEditingController _phoneNumberController = TextEditingController();
 
   final maskFormatter = RuPhoneInputFormatter();
-  final UserRepository _userRepository =
-      UserRepository(); // Экземпляр репозитория
 
+  final UserRepository _userRepository =
+      UserRepository(); 
+ // Экземпляр репозитория
   Future<void> _register(BuildContext context) async {
     try {
       // Регистрация нового пользователя через репозиторий
@@ -47,6 +57,8 @@ class ScreenRegistry extends StatelessWidget {
     }
   }
 
+  bool _isPasswordVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +78,7 @@ class ScreenRegistry extends StatelessWidget {
               width: 353,
               child:Column(
                 children: [
+                  SizedBox(height: 50,),
                   TextField(
                     controller: _nameController,
                     decoration: InputDecoration(
@@ -84,7 +97,7 @@ class ScreenRegistry extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   TextField(
                     controller: _surnameController,
@@ -104,7 +117,7 @@ class ScreenRegistry extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   TextField(
                     controller: _emailController,
@@ -124,7 +137,7 @@ class ScreenRegistry extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   TextField(
                     inputFormatters: [maskFormatter],
@@ -145,11 +158,22 @@ class ScreenRegistry extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   TextField(
+                    obscureText: !_isPasswordVisible,
                     controller: _passwordController,
+                
                     decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        onPressed: (){
+                        setState((){
+                          _isPasswordVisible=!_isPasswordVisible;
+                          });
+                        },
+                       icon:  Icon(
+                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: AppColors.primaryColor,),),
                       labelText: 'Пароль',
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -164,7 +188,7 @@ class ScreenRegistry extends StatelessWidget {
                               style: BorderStyle.solid)),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 20),
                   TextButton(
                       onPressed: () => _register(context),
                       child: Container(
