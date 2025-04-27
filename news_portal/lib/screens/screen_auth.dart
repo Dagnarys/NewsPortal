@@ -10,13 +10,21 @@ import 'package:news_portal/screens/screen_news_main.dart';
 import 'package:news_portal/screens/screen_regisrty.dart';
 import 'package:provider/provider.dart';
 
-class ScreenAuth extends StatelessWidget {
+class ScreenAuth extends StatefulWidget {
+  const ScreenAuth({super.key});
+
+  @override
+  State<ScreenAuth> createState() => _ScreenAuthState();
+}
+
+class _ScreenAuthState extends State<ScreenAuth> {
   final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
 
   final UserRepository _userRepository =
-      UserRepository(); // Экземпляр репозитория
-
+      UserRepository(); 
+ // Экземпляр репозитория
   Future<void> _signIn(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -44,6 +52,8 @@ class ScreenAuth extends StatelessWidget {
       );
     }
   }
+
+  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -90,8 +100,17 @@ class ScreenAuth extends StatelessWidget {
                         Expanded(child: Container()),
                         TextField(
                           controller: _passwordController,
-                          obscureText: true,
+                          obscureText: !_isPasswordVisible,
                           decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              onPressed: (){
+                              setState((){
+                                _isPasswordVisible=!_isPasswordVisible;
+                                });
+                              },
+                            icon:  Icon(
+                            _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                            color: AppColors.primaryColor,),),
                             labelText: 'Пароль',
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(width:1, color:  AppColors.primaryColor,style: BorderStyle.solid)
