@@ -35,6 +35,11 @@ class _ScreenAuthState extends State<ScreenAuth> {
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
+      
+      final String userId = userCredential.user!.uid; // Получаем ID пользователя
+
+      // Устанавливаем userId сразу
+      userProvider.setUserId(userId); // 
 
       // Получение роли пользователя
       final role = await _userRepository.getUserRole(userCredential.user!.uid);
