@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CarouselImages extends StatefulWidget {
-  const CarouselImages({super.key});
+  final List<String> imageUrls;
+
+  const CarouselImages({super.key,required this.imageUrls, });
 
   @override
   State<CarouselImages> createState() => _CarouselImagesState();
@@ -13,19 +15,12 @@ class _CarouselImagesState extends State<CarouselImages> {
     viewportFraction: 0.8,
   );
   int _currentPage = 0;
-  final List<String> images = [
-    'https://firebasestorage.googleapis.com/v0/b/newsportal-3c06e.firebasestorage.app/o/photo_2024-12-11_22-00-39.jpg?alt=media&token=05e6f348-76b8-4e23-83a5-10024fc76fb2',
-    'https://firebasestorage.googleapis.com/v0/b/newsportal-3c06e.firebasestorage.app/o/photo_2024-12-11_22-00-39.jpg?alt=media&token=05e6f348-76b8-4e23-83a5-10024fc76fb2',
-    'https://firebasestorage.googleapis.com/v0/b/newsportal-3c06e.firebasestorage.app/o/photo_2024-12-11_22-00-39.jpg?alt=media&token=05e6f348-76b8-4e23-83a5-10024fc76fb2',
-    'https://firebasestorage.googleapis.com/v0/b/newsportal-3c06e.firebasestorage.app/o/photo_2024-12-11_22-00-39.jpg?alt=media&token=05e6f348-76b8-4e23-83a5-10024fc76fb2',
-    'https://firebasestorage.googleapis.com/v0/b/newsportal-3c06e.firebasestorage.app/o/photo_2025-04-08_10-34-30.jpg?alt=media&token=7b1a8e3d-bb36-4277-901f-4a836af1f07b',
-  ];
   void _openFullScreen(int index) {
     Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (_, __, ___) => FullScreenGallery(
-          images: images,
+          imageUrls: widget.imageUrls,
           initialIndex: index,
         ),
         transitionDuration: const Duration(milliseconds: 300),
@@ -51,7 +46,7 @@ class _CarouselImagesState extends State<CarouselImages> {
                   _currentPage = page;
                 });
               },
-              itemCount: images.length,
+              itemCount: widget.imageUrls.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () => _openFullScreen(index),
@@ -62,7 +57,7 @@ class _CarouselImagesState extends State<CarouselImages> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
                         child: Image.network(
-                          images[index],
+                          widget.imageUrls[index],
                           fit: BoxFit.cover,
                           width: MediaQuery.of(context).size.width * 1,
                           loadingBuilder: (context, child, loadingProgress) {
@@ -93,11 +88,11 @@ class _CarouselImagesState extends State<CarouselImages> {
   }
 }
 class FullScreenGallery extends StatefulWidget {
-  final List<String> images;
+  final List<String> imageUrls;
   final int initialIndex;
 
   const FullScreenGallery({super.key, 
-    required this.images,
+    required this.imageUrls,
     required this.initialIndex,
   });
 
@@ -164,7 +159,7 @@ class _FullScreenGalleryState extends State<FullScreenGallery> {
                 Expanded(
                   child: PageView.builder(
                     controller: _pageController,
-                    itemCount: widget.images.length,
+                    itemCount: widget.imageUrls.length,
                     onPageChanged: (index) {
                       setState(() {
                         _currentIndex = index;
@@ -179,7 +174,7 @@ class _FullScreenGalleryState extends State<FullScreenGallery> {
                           child: Hero(
                             tag: 'image_$index',
                             child: Image.network(
-                              widget.images[index],
+                              widget.imageUrls[index],
                               fit: BoxFit.contain,
                             ),
                           ),
@@ -191,7 +186,7 @@ class _FullScreenGalleryState extends State<FullScreenGallery> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20),
                   child: Text(
-                    '${_currentIndex + 1}/${widget.images.length}',
+                    '${_currentIndex + 1}/${widget.imageUrls.length}',
                     style: const TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
