@@ -15,7 +15,7 @@ class SearchWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: ConstrainedBox(
             constraints: const BoxConstraints(
-              maxWidth: 280,
+              maxWidth: 360,
               minWidth: 50,
               maxHeight: 32,
             ),
