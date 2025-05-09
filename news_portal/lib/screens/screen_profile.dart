@@ -128,6 +128,43 @@ class _ScreenProfileState extends State<ScreenProfile> {
                           ),
                           SizedBox(height: 10),
                           TextField(
+                            enabled: false,
+                            style: TextStyle(
+                                fontFamily: AppFonts.nunitoFontFamily,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black),
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              labelStyle: TextStyle(
+                                fontFamily: AppFonts.nunitoFontFamily,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                                fontSize: 18,
+                              ),
+                              labelText: 'Email',
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 1,
+                                      color: AppColors.primaryColor,
+                                      style: BorderStyle.solid)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(1)),
+                                  borderSide: BorderSide(
+                                      width: 1,
+                                      color: AppColors.primaryColor,
+                                      style: BorderStyle.solid)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(16)),
+                                  borderSide: BorderSide(
+                                      width: 1,
+                                      color: AppColors.primaryColor,
+                                      style: BorderStyle.solid)),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          TextField(
                             style: TextStyle(
                                 fontFamily: AppFonts.nunitoFontFamily,
                                 fontWeight: FontWeight.w500,
@@ -179,43 +216,6 @@ class _ScreenProfileState extends State<ScreenProfile> {
                                 fontSize: 18,
                               ),
                               labelText: 'Фамилия',
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 1,
-                                      color: AppColors.primaryColor,
-                                      style: BorderStyle.solid)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(1)),
-                                  borderSide: BorderSide(
-                                      width: 1,
-                                      color: AppColors.primaryColor,
-                                      style: BorderStyle.solid)),
-                              disabledBorder: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(16)),
-                                  borderSide: BorderSide(
-                                      width: 1,
-                                      color: AppColors.primaryColor,
-                                      style: BorderStyle.solid)),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          TextField(
-                            style: TextStyle(
-                                fontFamily: AppFonts.nunitoFontFamily,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black),
-                            enabled: _isEditing,
-                            controller: _emailController,
-                            decoration: InputDecoration(
-                              labelStyle: TextStyle(
-                                fontFamily: AppFonts.nunitoFontFamily,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                                fontSize: 18,
-                              ),
-                              labelText: 'Email',
                               border: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 1,
