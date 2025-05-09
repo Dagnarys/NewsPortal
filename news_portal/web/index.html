@@ -1,19 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
+  <!-- Base href -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
@@ -33,6 +21,32 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <!-- 🔥 Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
+
+  <!-- 🔑 Firebase Config (скопируй из firebase_options.dart, секция web) -->
+  <script type="module">
+    // Import the functions you need from the SDKs
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
+    import { getAuth } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js';
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyByWKOiPDwsrqeIaovlvJZII7DVO48xYB4",
+      authDomain: "newsportal-3c06e.firebaseapp.com",
+      projectId: "newsportal-3c06e",
+      storageBucket: "newsportal-3c06e.firebasestorage.app",
+      messagingSenderId: "657194578963",
+      appId: "1:657194578963:web:3c51d587c774dcc69efbe6"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+  </script>
+
+  <!-- Flutter App -->
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
