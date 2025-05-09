@@ -25,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -70,6 +64,24 @@ class DefaultFirebaseOptions {
     projectId: 'newsportal-3c06e',
     storageBucket: 'newsportal-3c06e.firebasestorage.app',
     iosBundleId: 'com.example.newsPortal',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAEOo6Jwt7tlUyJcCvKQYfNTtdscPWE7C0',
+    appId: '1:657194578963:ios:b9685d02e47b612b9efbe6',
+    messagingSenderId: '657194578963',
+    projectId: 'newsportal-3c06e',
+    storageBucket: 'newsportal-3c06e.firebasestorage.app',
+    iosBundleId: 'com.example.newsPortal',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyByWKOiPDwsrqeIaovlvJZII7DVO48xYB4',
+    appId: '1:657194578963:web:1ad0ec7ca22904279efbe6',
+    messagingSenderId: '657194578963',
+    projectId: 'newsportal-3c06e',
+    authDomain: 'newsportal-3c06e.firebaseapp.com',
+    storageBucket: 'newsportal-3c06e.firebasestorage.app',
   );
 
 }
