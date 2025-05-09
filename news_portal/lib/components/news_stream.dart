@@ -68,13 +68,19 @@ class _NewsStreamState extends State<NewsStream> {
                   itemCount: newsWithCategories.length,
                   itemBuilder: (context, index) {
                     final newsItem = newsWithCategories[index];
+                    if ((newsItem['images'] as List<String>).isEmpty) {
+                      print(
+                          "⚠️ Новость ${newsItem['title']} не имеет изображений");
+                      return SizedBox(); // или placeholder
+                    }
+
                     return NewsCard(
                       key: ValueKey(newsItem['id']),
                       title: newsItem['title'],
                       content: newsItem['content'],
                       newsId: newsItem['id'],
                       nameCategory: '#${newsItem['categoryName']}',
-                      imageUrl: newsItem['image_url'],
+                      imageUrls: newsItem['images'] as List<String>,
                     );
                   },
                 );
@@ -98,12 +104,13 @@ class _NewsStreamState extends State<NewsStream> {
 
     for (final news in newsList) {
       final categoryName = await news.getCategoryName(categoriesRepo);
+
       newsWithCategories.add({
         'id': news.id,
         'title': news.title,
         'content': news.content,
         'categoryName': categoryName,
-        'image_url':news.imageUrl
+        'images': news.images,
       });
     }
 
