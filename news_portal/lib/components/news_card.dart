@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:news_portal/fonts/fonts.dart';
+import 'package:news_portal/screens/screen_comment.dart';
 import 'package:news_portal/screens/screen_new.dart';
 
 class NewsCard extends StatelessWidget {
@@ -8,15 +9,15 @@ class NewsCard extends StatelessWidget {
   final String content;
   final String newsId;
   final String nameCategory;
-  final String imageUrl;
+  final List<String> imageUrls;
   const NewsCard({
-    super.key,
-    required this.title,
-    required this.content,
-    required this.newsId,
-    required this.nameCategory,
-    required this.imageUrl,
-  });
+  super.key,
+  required this.title,
+  required this.content,
+  required this.newsId,
+  required this.nameCategory,
+  required this.imageUrls,
+});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class NewsCard extends StatelessWidget {
                         newsId: newsId,
                         content: content,
                         title: title,
-                        image: imageUrl,
+                        imageUrls: imageUrls,
                       )));
         },
         child: Container(
@@ -39,16 +40,15 @@ class NewsCard extends StatelessWidget {
           width: 321,
           height: 205,
           decoration: BoxDecoration(
-              color: imageUrl.isNotEmpty
-                  ? null
-                  : Colors.black, // Черный фон, если изображение отсутствует
-              image: imageUrl.isNotEmpty
-                  ? DecorationImage(
-                      image: NetworkImage(imageUrl), // Загрузка изображения
-                      fit: BoxFit.cover,
-                    )
-                  : null, // Если imageUrl пустой, изображение не используется
-              borderRadius: BorderRadius.all(Radius.circular(16))),
+            color: imageUrls.isEmpty ? Colors.grey[300] : null,
+            image: imageUrls.isNotEmpty
+                ? DecorationImage(
+                    image: NetworkImage(imageUrls.first),
+                    fit: BoxFit.cover,
+                  )
+                : null,
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+          ),
           child: Column(
             children: [
               Text(
@@ -63,7 +63,7 @@ class NewsCard extends StatelessWidget {
                 height: 26,
               ),
               Text(
-                  maxLines: 4,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   content,
                   style: TextStyle(
@@ -83,8 +83,18 @@ class NewsCard extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      SvgPicture.asset(
-                        'assets/svg/comment.svg',
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ScreenComment(
+                                        newsId: newsId,
+                                      )));
+                        },
+                        icon: SvgPicture.asset(
+                          'assets/svg/comment.svg',
+                        ),
                       ),
                       SizedBox(
                         width: 2,
