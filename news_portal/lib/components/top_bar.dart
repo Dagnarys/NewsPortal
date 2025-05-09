@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:news_portal/components/hamburger_widget.dart';
 import 'package:news_portal/components/search_widget.dart';
 import 'package:news_portal/const/colors.dart';
 
@@ -14,7 +13,7 @@ class TopBar extends StatelessWidget {
       child: Align(
         child: Container(
           // color: Colors.white,
-          width: 345,
+          width: 380,
           height: 40,
           
           child:  Row(
@@ -38,7 +37,6 @@ class TopBar extends StatelessWidget {
                   ),
                 ),
               const SearchWidget(),
-              const HamburgerWidget(),
             ],
           ),
         ),
