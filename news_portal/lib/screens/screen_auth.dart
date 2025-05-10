@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:news_portal/components/nav_bar.dart';
@@ -18,13 +17,27 @@ class ScreenAuth extends StatefulWidget {
 }
 
 class _ScreenAuthState extends State<ScreenAuth> {
+  final TextEditingController _searchController = TextEditingController();
+
+  void _onSearchSubmitted(String value) {
+    if (value.isNotEmpty) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainScreen(
+            searchQuery: value.toLowerCase(), // ← Передаём поисковый запрос
+          ),
+        ),
+      );
+    }
+  }
+
   final TextEditingController _emailController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
 
-  final UserRepository _userRepository =
-      UserRepository(); 
- // Экземпляр репозитория
+  final UserRepository _userRepository = UserRepository();
+  // Экземпляр репозитория
   Future<void> _signIn(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -35,11 +48,12 @@ class _ScreenAuthState extends State<ScreenAuth> {
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
-      
-      final String userId = userCredential.user!.uid; // Получаем ID пользователя
+
+      final String userId =
+          userCredential.user!.uid; // Получаем ID пользователя
 
       // Устанавливаем userId сразу
-      userProvider.setUserId(userId); // 
+      userProvider.setUserId(userId); //
 
       // Получение роли пользователя
       final role = await _userRepository.getUserRole(userCredential.user!.uid);
@@ -68,7 +82,10 @@ class _ScreenAuthState extends State<ScreenAuth> {
       body: Column(
         children: [
           // Верхняя панель
-          TopBar(),
+          TopBar(
+            searchController: _searchController,
+            onSubmitted: _onSearchSubmitted,
+          ),
 
           // Основное содержимое
           Expanded(
@@ -88,41 +105,50 @@ class _ScreenAuthState extends State<ScreenAuth> {
                     child: Column(
                       children: [
                         TextField(
-                            controller: _emailController,
-                            decoration: InputDecoration(
-                              
-                              labelText: 'Email',
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(width:1, color:  AppColors.primaryColor,style: BorderStyle.solid)
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(width:1, color:  AppColors.primaryColor,style: BorderStyle.solid)
-                              ),
-                            ),
-                            
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            labelText: 'Email',
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.primaryColor,
+                                    style: BorderStyle.solid)),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.primaryColor,
+                                    style: BorderStyle.solid)),
                           ),
-                        
+                        ),
                         Expanded(child: Container()),
                         TextField(
                           controller: _passwordController,
                           obscureText: !_isPasswordVisible,
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
-                              onPressed: (){
-                              setState((){
-                                _isPasswordVisible=!_isPasswordVisible;
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
                                 });
                               },
-                            icon:  Icon(
-                            _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                            color: AppColors.primaryColor,),),
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
                             labelText: 'Пароль',
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(width:1, color:  AppColors.primaryColor,style: BorderStyle.solid)
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(width:1, color:  AppColors.primaryColor,style: BorderStyle.solid)
-                              ),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.primaryColor,
+                                    style: BorderStyle.solid)),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: AppColors.primaryColor,
+                                    style: BorderStyle.solid)),
                           ),
                         ),
                       ],

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:news_portal/const/colors.dart';
 class SearchWidget extends StatelessWidget {
+   final TextEditingController controller;
+  final Function(String) onSubmitted;
+
   const SearchWidget({
+    required this.controller,
+    required this.onSubmitted,
     super.key,
   });
 
@@ -20,7 +25,9 @@ class SearchWidget extends StatelessWidget {
               maxHeight: 32,
             ),
             
-            child: const TextField(
+            child:  TextField(
+              controller: controller,
+              onSubmitted: onSubmitted,
               style: TextStyle(
                 fontSize: 12,
               ),

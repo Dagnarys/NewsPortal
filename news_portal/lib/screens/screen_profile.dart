@@ -9,6 +9,7 @@ import 'package:news_portal/fonts/fonts.dart';
 import 'package:news_portal/providers/user_provider.dart';
 import 'package:news_portal/repositories/user.dart';
 import 'package:news_portal/screens/screen_auth.dart';
+import 'package:news_portal/screens/screen_news_main.dart';
 import 'package:provider/provider.dart';
 import 'package:news_portal/const/colors.dart';
 import 'package:ru_phone_formatter/ru_phone_formatter.dart';
@@ -21,6 +22,22 @@ class ScreenProfile extends StatefulWidget {
 }
 
 class _ScreenProfileState extends State<ScreenProfile> {
+  final TextEditingController _searchController = TextEditingController();
+
+
+  void _onSearchSubmitted(String value) {
+    if (value.isNotEmpty) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainScreen(
+            searchQuery: value.toLowerCase(), // ← Передаём поисковый запрос
+          ),
+        ),
+      );
+    }
+  }
+
   final UserRepository _userRepository =
       UserRepository(); // Экземпляр репозитория
   bool _isEditing = false; // Флаг для режима редактирования
@@ -82,7 +99,10 @@ class _ScreenProfileState extends State<ScreenProfile> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                TopBar(),
+                TopBar(
+                  searchController: _searchController,
+                  onSubmitted: _onSearchSubmitted,
+                ),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Container(
@@ -118,7 +138,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
                                         width: 50,
                                         height: 50,
                                         child: IconButton(
-                                            onPressed: _pickImage ,
+                                            onPressed: _pickImage,
                                             icon: SvgPicture.asset(
                                               'assets/svg/editor_img.svg',
                                             )),

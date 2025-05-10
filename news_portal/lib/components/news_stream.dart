@@ -10,11 +10,14 @@ import 'package:provider/provider.dart';
 class NewsStream extends StatefulWidget {
   final NewsRepository _repositoryNews;
   final String? selectedCategoryId;
-  const NewsStream(
-      {super.key,
-      required NewsRepository repositoryNews,
-      required this.selectedCategoryId})
-      : _repositoryNews = repositoryNews;
+  final String searchQuery; // <-- Новое поле
+
+  const NewsStream({
+    super.key,
+    required NewsRepository repositoryNews,
+    required this.selectedCategoryId,
+    this.searchQuery = '',
+  }) : _repositoryNews = repositoryNews;
 
   @override
   State<NewsStream> createState() => _NewsStreamState();
@@ -31,7 +34,7 @@ class _NewsStreamState extends State<NewsStream> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<News> newsList = snapshot.data!;
-
+          newsList = _applyFilters(newsList);
           // Фильтрация новостей по выбранной категории
           // Проверка на пустой список новостей
           if (newsList.isEmpty) {
@@ -116,4 +119,21 @@ class _NewsStreamState extends State<NewsStream> {
 
     return newsWithCategories;
   }
+  List<News> _applyFilters(List<News> newsList) {
+  if (widget.selectedCategoryId != null && widget.selectedCategoryId!.isNotEmpty) {
+    newsList = newsList.where((n) => n.categoryId == widget.selectedCategoryId).toList();
+  }
+
+  if (widget.searchQuery.isNotEmpty) {
+    final lowerQuery = widget.searchQuery.toLowerCase();
+    newsList = newsList
+        .where((n) => n.title.toLowerCase().contains(lowerQuery) || 
+              n.content.toLowerCase().contains(lowerQuery))
+        .toList();
+  }
+
+  return newsList;
 }
+}
+
+

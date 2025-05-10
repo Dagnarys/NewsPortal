@@ -5,6 +5,7 @@ import 'package:news_portal/const/colors.dart';
 import 'package:news_portal/fonts/fonts.dart';
 import 'package:news_portal/repositories/user.dart';
 import 'package:news_portal/screens/screen_auth.dart';
+import 'package:news_portal/screens/screen_news_main.dart';
 import 'package:ru_phone_formatter/ru_phone_formatter.dart';
 
 class ScreenRegistry extends StatefulWidget {
@@ -13,6 +14,21 @@ class ScreenRegistry extends StatefulWidget {
 }
 
 class _ScreenRegistryState extends State<ScreenRegistry> {
+  final TextEditingController _searchController = TextEditingController();
+
+  void _onSearchSubmitted(String value) {
+    if (value.isNotEmpty) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainScreen(
+            searchQuery: value.toLowerCase(), // ← Передаём поисковый запрос
+          ),
+        ),
+      );
+    }
+  }
+
   final TextEditingController _emailController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
@@ -25,9 +41,8 @@ class _ScreenRegistryState extends State<ScreenRegistry> {
 
   final maskFormatter = RuPhoneInputFormatter();
 
-  final UserRepository _userRepository =
-      UserRepository(); 
- // Экземпляр репозитория
+  final UserRepository _userRepository = UserRepository();
+  // Экземпляр репозитория
   Future<void> _register(BuildContext context) async {
     try {
       // Регистрация нового пользователя через репозиторий
@@ -64,21 +79,32 @@ class _ScreenRegistryState extends State<ScreenRegistry> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      body: Stack(
-        children:[ Column(
-        
+      body: Stack(children: [
+        Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TopBar(),
-            Text('Регистрация', style: TextStyle(fontSize: 30, fontFamily: AppFonts.nunitoFontFamily, fontWeight: FontWeight.w600),),
-            Flexible( // Используем Flexible вместо Expanded
-            fit: FlexFit.loose,
-            child: SizedBox.shrink()),
+            TopBar(
+              searchController: _searchController,
+              onSubmitted: _onSearchSubmitted,
+            ),
+            Text(
+              'Регистрация',
+              style: TextStyle(
+                  fontSize: 30,
+                  fontFamily: AppFonts.nunitoFontFamily,
+                  fontWeight: FontWeight.w600),
+            ),
+            Flexible(
+                // Используем Flexible вместо Expanded
+                fit: FlexFit.loose,
+                child: SizedBox.shrink()),
             Container(
               width: 353,
-              child:Column(
+              child: Column(
                 children: [
-                  SizedBox(height: 50,),
+                  SizedBox(
+                    height: 50,
+                  ),
                   TextField(
                     controller: _nameController,
                     decoration: InputDecoration(
@@ -163,17 +189,20 @@ class _ScreenRegistryState extends State<ScreenRegistry> {
                   TextField(
                     obscureText: !_isPasswordVisible,
                     controller: _passwordController,
-                
                     decoration: InputDecoration(
                       suffixIcon: IconButton(
-                        onPressed: (){
-                        setState((){
-                          _isPasswordVisible=!_isPasswordVisible;
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
                           });
                         },
-                       icon:  Icon(
-                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                      color: AppColors.primaryColor,),),
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
                       labelText: 'Пароль',
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -196,7 +225,8 @@ class _ScreenRegistryState extends State<ScreenRegistry> {
                         height: 56,
                         decoration: BoxDecoration(
                             gradient: AppColors.buttonGradient,
-                            borderRadius: BorderRadius.all(Radius.circular(10))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
                         child: Center(
                             child: Text(
                           'Зарегистрироваться',
@@ -209,12 +239,13 @@ class _ScreenRegistryState extends State<ScreenRegistry> {
                 ],
               ),
             ),
-
           ],
         ),
-        Align( // Позиционируем NavBar внизу экрана
-          alignment: Alignment.bottomCenter,
-          child: NavBar())]),
+        Align(
+            // Позиционируем NavBar внизу экрана
+            alignment: Alignment.bottomCenter,
+            child: NavBar())
+      ]),
     );
   }
 }

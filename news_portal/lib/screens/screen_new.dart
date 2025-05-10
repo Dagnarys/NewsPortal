@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news_portal/components/carousel_images_gallery.dart';
 import 'package:news_portal/components/top_bar.dart';
 import 'package:news_portal/repositories/news.dart';
+import 'package:news_portal/screens/screen_news_main.dart';
 
 class ScreenNew extends StatefulWidget {
   final String newsId;
@@ -24,6 +25,21 @@ class ScreenNew extends StatefulWidget {
 
 class _ScreenNewState extends State<ScreenNew> {
   final ScrollController _scrollController = ScrollController();
+
+  final TextEditingController _searchController = TextEditingController();
+
+  void _onSearchSubmitted(String value) {
+    if (value.isNotEmpty) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainScreen(
+            searchQuery: value.toLowerCase(), // ← Передаём поисковый запрос
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -75,7 +91,10 @@ class _ScreenNewState extends State<ScreenNew> {
                 toolbarHeight: 40,
                 elevation: 0,
                 backgroundColor: Colors.transparent,
-                flexibleSpace: const TopBar(),
+                flexibleSpace: TopBar(
+                  searchController: _searchController,
+                  onSubmitted: _onSearchSubmitted,
+                ),
                 titleSpacing: 0,
                 centerTitle: false,
                 excludeHeaderSemantics: true,
@@ -92,7 +111,7 @@ class _ScreenNewState extends State<ScreenNew> {
                       Stack(
                         children: [
                           Container(
-                            margin: EdgeInsets.only(top: 25),
+                            margin: EdgeInsets.only(top: 40),
                             padding:
                                 EdgeInsets.only(top: 90, right: 4, left: 4),
                             decoration: BoxDecoration(

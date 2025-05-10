@@ -4,7 +4,14 @@ import 'package:news_portal/components/search_widget.dart';
 import 'package:news_portal/const/colors.dart';
 
 class TopBar extends StatelessWidget {
-  const TopBar({super.key});
+    final TextEditingController searchController;
+  final Function(String) onSubmitted;
+  const TopBar({
+    super.key,
+    required this.searchController,
+    required this.onSubmitted,
+    }
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +43,10 @@ class TopBar extends StatelessWidget {
                     icon: SvgPicture.asset('assets/svg/back.svg',color: Colors.white,),
                   ),
                 ),
-              const SearchWidget(),
+              SearchWidget(
+                controller: searchController,
+                onSubmitted: onSubmitted,
+              ),
             ],
           ),
         ),
