@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:news_portal/providers/user_provider.dart';
+import 'package:news_portal/screens/screen_add.dart';
 import 'package:news_portal/screens/screen_auth.dart';
 import 'package:news_portal/screens/screen_news_main.dart';
 import 'package:news_portal/screens/screen_profile.dart';
@@ -106,7 +107,13 @@ class _NavBarState extends State<NavBar> {
                 icon: SvgPicture.asset('assets/svg/news.svg'),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ScreenAdd()),
+                    // (route) => false,
+                  );
+                },
                 icon: SvgPicture.asset('assets/svg/add.svg'),
               ),
               IconButton(
