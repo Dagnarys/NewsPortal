@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:news_portal/components/nav_bar.dart';
 import 'package:news_portal/components/top_bar.dart';
@@ -38,39 +37,34 @@ class _ScreenAuthState extends State<ScreenAuth> {
 
   final UserRepository _userRepository = UserRepository();
   // Экземпляр репозитория
-  Future<void> _signIn(BuildContext context) async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+Future<void> _signIn(BuildContext context) async {
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    try {
-      // Авторизация через репозиторий
-      final UserCredential userCredential =
-          await _userRepository.signInWithEmailAndPassword(
-        _emailController.text.trim(),
-        _passwordController.text.trim(),
-      );
+  try {
+    // Вход по email/password
+    await _userRepository.signInWithEmailAndPassword(
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
+    );
 
-      final String userId =
-          userCredential.user!.uid; // Получаем ID пользователя
+    // Загружаем полные данные пользователя из Firestore
+    await userProvider.loadCurrentUser();
 
-      // Устанавливаем userId сразу
-      userProvider.setUserId(userId); //
-
-      // Получение роли пользователя
-      final role = await _userRepository.getUserRole(userCredential.user!.uid);
-      userProvider.setRole(role ?? 'user'); // Устанавливаем роль
-
-      // Переход на главный экран
+    // Теперь мы знаем роль пользователя
+    if (userProvider.isModerator) {
+      
+    } else {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => MainScreen()),
       );
-    } catch (e) {
-      // Обработка ошибок
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$e')),
-      );
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Ошибка входа: $e')),
+    );
   }
+}
 
   bool _isPasswordVisible = false;
 
