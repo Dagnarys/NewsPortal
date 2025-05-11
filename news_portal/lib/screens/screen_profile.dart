@@ -7,6 +7,7 @@ import 'package:news_portal/components/nav_bar.dart';
 import 'package:news_portal/components/top_bar.dart';
 import 'package:news_portal/fonts/fonts.dart';
 import 'package:news_portal/providers/user_provider.dart';
+import 'package:news_portal/repositories/images.dart';
 import 'package:news_portal/repositories/user.dart';
 import 'package:news_portal/screens/screen_auth.dart';
 import 'package:news_portal/screens/screen_news_main.dart';
@@ -37,7 +38,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
       );
     }
   }
-
+  final ImagesRepository _storage = ImagesRepository();
   final UserRepository _userRepository =
       UserRepository(); // Экземпляр репозитория
   bool _isEditing = false; // Флаг для режима редактирования
@@ -305,7 +306,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
                                 if (_selectedImage != null) {
                                   try {
                                     newImageUrl =
-                                        await _userRepository.uploadImage(
+                                        await _storage.uploadImage(
                                             _selectedImage!,
                                             userProvider.userId!);
                                     print(
