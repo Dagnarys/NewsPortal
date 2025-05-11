@@ -1,52 +1,73 @@
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
+import 'package:news_portal/models/model_user.dart';
 import 'package:news_portal/repositories/user.dart';
 import 'package:news_portal/screens/screen_news_main.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 class UserProvider with ChangeNotifier {
-
   final UserRepository _userRepository = UserRepository();
-  String? _role;
-  String? _userId;
-  String? get role => _role;
 
-  bool get isGuest => _role == null;
-  bool get isUser => _role == 'user';
-  bool get isModerator => _role == 'moderator';
+  User? _currentUser;
 
-  String? get userId => _userId;
+  User? get user => _currentUser;
+  String get userEmail => _currentUser?.email ?? '';
+  String get userFirstName => _currentUser?.name ?? '';
+  String get userLastName => _currentUser?.surname ?? '';
+  String get userFullName => '$userFirstName $userLastName'.trim();
+  String get userAvatarUrl => _currentUser?.imageUrl ?? '';
+  bool get isGuest => _currentUser == null;
+  bool get isUser => _currentUser?.role == 'user';
+  bool get isModerator => _currentUser?.role == 'moderator';
+  String? get userId => _currentUser?.id;
 
-  void setRole(String newRole) {
-    _role = newRole;
-    notifyListeners();
-  }
-
-  // Метод для установки userId (например, при входе в систему)
-  void setUserId(String id) {
-    _userId = id;
-    notifyListeners(); // Уведомляем слушателей об изменении состояния
-  }
-  void clearRole() {
-    _role = null;
-    notifyListeners();
-  }
-    Future<void> loadCurrentUser() async {
+  Future<void> loadCurrentUser() async {
     try {
-      final userData = await _userRepository.getCurrentUserData();
-      if (userData != null) {
-        _userId = FirebaseAuth.instance.currentUser!.uid; // Устанавливаем userId
+      // Получаем текущего пользователя из Firebase Auth
+      final firebaseUser = auth.FirebaseAuth.instance.currentUser;
+      if (firebaseUser == null) {
+        _currentUser = null;
         notifyListeners();
+        return;
       }
+
+      // Получаем дополнительные данные из Firestore
+      final userData = await _userRepository.getUserDetails(firebaseUser.uid);
+      if (userData != null) {
+        _currentUser = User(
+          id: firebaseUser.uid,
+          email: userData['email'] ?? '',
+          name: userData['name'] ?? '',
+          surname: userData['surname'] ?? '',
+          role: userData['role'] ?? 'user',
+          imageUrl: userData['imageUrl'],
+        );
+      } else {
+        // Если данных нет — создаём дефолтного пользователя
+        _currentUser = User(
+          id: firebaseUser.uid,
+          email: firebaseUser.email ?? '',
+          name: '',
+          surname: '',
+          role: 'user',
+          imageUrl: null,
+        );
+      }
+
+      notifyListeners();
     } catch (e) {
       print('Ошибка загрузки данных пользователя: $e');
+      _currentUser = null;
+      notifyListeners();
     }
   }
+
+  // Выход из аккаунта
   Future<void> signOut(BuildContext context) async {
-    final userRepository = UserRepository(); // Инициализация репозитория
     try {
-      await userRepository.signOut();
-      clearRole(); // Очищаем роль пользователя
+      await _userRepository.signOut();
+      _currentUser = null;
+      notifyListeners();
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => MainScreen()),
