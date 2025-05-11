@@ -50,13 +50,16 @@ class _ScreenCommentState extends State<ScreenComment> {
       return;
     }
 
-    final newComment = Comment(
-      id: '',
-      newsId: widget.newsId,
-      userId: userProvider.userId ?? 'unknown',
-      text: text,
-      createdAt: Timestamp.now(),
-    );
+    
+final newComment = Comment(
+  id: '',
+  newsId: widget.newsId,
+  userId: userProvider.userId ?? 'unknown',
+  text: _commentController.text,
+  createdAt: Timestamp.now(),
+  userName: userProvider.userFirstName,
+  userSurname: userProvider.userLastName,
+);
 
     await _newsRepo.addCommentToNews(widget.newsId, newComment);
 
@@ -116,12 +119,12 @@ class _ScreenCommentState extends State<ScreenComment> {
                   } else {
                     final comments = snapshot.data!;
                     return ListView.separated(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      padding: EdgeInsets.fromLTRB(10,0,10,20),
                       itemCount: comments.length,
                       itemBuilder: (context, index) {
                         return CommentCard(comment: comments[index]);
                       },
-                      separatorBuilder: (context, index) => Divider(),
+                      separatorBuilder: (context, index) => SizedBox(height: 12,),
                     );
                   }
                 },
