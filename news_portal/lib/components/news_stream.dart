@@ -65,7 +65,8 @@ class _NewsStreamState extends State<NewsStream> {
               } else {
                 final newsWithCategories = categorySnapshot.data!;
                 return ListView.builder(
-                  padding: EdgeInsets.all(0),
+
+                  padding: EdgeInsets.only(bottom: 60),
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
                   itemCount: newsWithCategories.length,
