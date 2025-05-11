@@ -8,6 +8,8 @@ class Comment {
   final String userId;
   final String text;
   final Timestamp createdAt;
+  final String userName; // ← новое поле
+  final String userSurname; // ← новое поле
 
   Comment({
     required this.id,
@@ -15,6 +17,8 @@ class Comment {
     required this.userId,
     required this.text,
     required this.createdAt,
+    required this.userSurname,
+    required this.userName,
   });
 
   // Конструктор для создания объекта Comment из данных Firestore
@@ -26,6 +30,8 @@ class Comment {
       userId: data['user_id'] ?? '',
       text: data['text'] ?? '',
       createdAt: data['created_at'] ?? Timestamp.now(),
+      userName: data['user_name'] ?? '',
+      userSurname: data['user_surname'] ?? '',
     );
   }
 
@@ -36,6 +42,8 @@ class Comment {
       'user_id': userId,
       'text': text,
       'created_at': createdAt,
+      'user_name': userName,
+      'user_surname': userSurname,
     };
   }
 }
