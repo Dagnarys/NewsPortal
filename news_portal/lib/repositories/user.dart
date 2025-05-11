@@ -105,42 +105,29 @@ class UserRepository {
   ) async {
     try {
       print('Обновляем данные пользователя в Firestore...');
-      await _firestore.collection('users').doc(userId).set({
-        'name': name,
-        'surname': surname,
-        'email': email,
-        'phoneNumber': phoneNumber,
-        if (imageUrl != null) 'imageUrl': imageUrl, // Добавляем или обновляем поле imageUrl
-      }, SetOptions(merge: true)); // Используем merge, чтобы не перезаписывать все поля
+      await _firestore.collection('users').doc(userId).set(
+          {
+            'name': name,
+            'surname': surname,
+            'email': email,
+            'phoneNumber': phoneNumber,
+            if (imageUrl != null)
+              'imageUrl': imageUrl, // Добавляем или обновляем поле imageUrl
+          },
+          SetOptions(
+              merge:
+                  true)); // Используем merge, чтобы не перезаписывать все поля
       print('Данные пользователя успешно обновлены');
-     final updatedUserData = await _firestore.collection('users').doc(userId).get();
-    print('Обновленные данные пользователя: ${updatedUserData.data()}');
-  } catch (e) {
-    print('Ошибка обновления данных пользователя: $e');
-    throw Exception('Ошибка обновления данных пользователя: $e');
+      final updatedUserData =
+          await _firestore.collection('users').doc(userId).get();
+      print('Обновленные данные пользователя: ${updatedUserData.data()}');
+    } catch (e) {
+      print('Ошибка обновления данных пользователя: $e');
+      throw Exception('Ошибка обновления данных пользователя: $e');
+    }
   }
-  }
-  
 
-  // Загрузка изображения в Firebase Storage
-  Future<String> uploadImage(File imageFile, String userId) async {
-  try {
-    print('Создаем ссылку на Firebase Storage...');
-    final Reference storageRef = _storage.ref().child('profile_images/$userId.jpg');
 
-    print('Начинаем загрузку файла...');
-    await storageRef.putFile(imageFile);
-
-    print('Получаем URL загруженного файла...');
-    final String downloadUrl = await storageRef.getDownloadURL();
-    print('URL загруженного файла: $downloadUrl');
-
-    return downloadUrl;
-  } catch (e) {
-    print('Ошибка загрузки изображения: $e');
-    throw Exception('Ошибка загрузки изображения: $e');
-  }
-}
 
   // Обновление ссылки на изображение в Firestore
   Future<void> updateProfileImage(String userId, String imageUrl) async {
@@ -152,5 +139,4 @@ class UserRepository {
       throw Exception('Ошибка обновления изображения: $e');
     }
   }
-
 }
