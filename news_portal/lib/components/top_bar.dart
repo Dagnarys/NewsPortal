@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:news_portal/components/search_widget.dart';
 import 'package:news_portal/const/colors.dart';
 
 class TopBar extends StatelessWidget {
     final TextEditingController searchController;
-  final Function(String) onSubmitted;
+  final ValueChanged<String> onSubmitted;
   const TopBar({
     super.key,
     required this.searchController,
@@ -38,7 +39,7 @@ class TopBar extends StatelessWidget {
                   ),
                   child: IconButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      context.pop('/');
                     },
                     icon: SvgPicture.asset('assets/svg/back.svg',color: Colors.white,),
                   ),
