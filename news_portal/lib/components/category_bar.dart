@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:news_portal/components/chips_button.dart';
 import 'package:news_portal/const/colors.dart';
 import 'package:news_portal/fonts/fonts.dart';
 import 'package:news_portal/models/model_categories.dart';
 import 'package:news_portal/repositories/categories.dart';
-import 'package:news_portal/screens/screen_category.dart';
 
 class CategoryBar extends StatefulWidget {
   const CategoryBar({super.key});
@@ -71,9 +71,7 @@ class CategoryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const ScreenCategory()));
-        },
+          context.push('/category');},
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
         ),
