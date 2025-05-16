@@ -12,6 +12,11 @@ class AppColors {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
+  static const LinearGradient redwhiteGradient = LinearGradient(
+    colors: [Colors.red,Color(0xFFBCC4CE) ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
     static const LinearGradient buttonGradient = LinearGradient(
     colors: [buttonColorTop, Color(0xFFBCC4CE)],
     begin: Alignment.topCenter,
