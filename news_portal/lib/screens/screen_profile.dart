@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:news_portal/components/nav_bar.dart';
 import 'package:news_portal/components/top_bar.dart';
@@ -10,7 +11,6 @@ import 'package:news_portal/providers/user_provider.dart';
 import 'package:news_portal/repositories/images.dart';
 import 'package:news_portal/repositories/user.dart';
 import 'package:news_portal/screens/screen_auth.dart';
-import 'package:news_portal/screens/screen_news_main.dart';
 import 'package:provider/provider.dart';
 import 'package:news_portal/const/colors.dart';
 import 'package:ru_phone_formatter/ru_phone_formatter.dart';
@@ -28,14 +28,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
 
   void _onSearchSubmitted(String value) {
     if (value.isNotEmpty) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MainScreen(
-            searchQuery: value.toLowerCase(), // ← Передаём поисковый запрос
-          ),
-        ),
-      );
+       context.go('/',extra: {'categoryId':null,'searchQuery':value.toLowerCase()});
     }
   }
   final ImagesRepository _storage = ImagesRepository();
