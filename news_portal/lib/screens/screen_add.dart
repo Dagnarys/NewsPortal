@@ -1,16 +1,19 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart' as found;
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:news_portal/components/dialog_indicator.dart';
 import 'package:news_portal/components/top_bar.dart';
 import 'package:news_portal/const/colors.dart';
 import 'package:news_portal/fonts/fonts.dart';
 import 'package:news_portal/models/model_categories.dart';
+import 'package:news_portal/providers/user_provider.dart';
 import 'package:news_portal/repositories/categories.dart';
 import 'package:news_portal/repositories/images.dart';
-import 'package:news_portal/screens/screen_news_main.dart';
+import 'package:provider/provider.dart';
 
 class ScreenAdd extends StatefulWidget {
   const ScreenAdd({super.key});
@@ -24,7 +27,7 @@ class _ScreenAddState extends State<ScreenAdd> {
   late final CategoriesRepository _categoriesRepository;
   List<Category> _categories = [];
   Category? _selectedCategory;
-
+  final GlobalKey<UploadProgressDialogState> progressKey = GlobalKey();
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
@@ -39,6 +42,7 @@ class _ScreenAddState extends State<ScreenAdd> {
     super.dispose();
   }
 
+  @override
   void initState() {
     super.initState();
     _categoriesRepository = CategoriesRepository();
@@ -62,14 +66,8 @@ class _ScreenAddState extends State<ScreenAdd> {
 
   void _onSearchSubmitted(String value) {
     if (value.isNotEmpty) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MainScreen(
-            searchQuery: value.toLowerCase(), // ← Передаём поисковый запрос
-          ),
-        ),
-      );
+      context.go('/',
+          extra: {'categoryId': null, 'searchQuery': value.toLowerCase()});
     }
   }
 
@@ -97,7 +95,8 @@ class _ScreenAddState extends State<ScreenAdd> {
           ),
           itemCount: _selectedImages.length,
           itemBuilder: (context, index) {
-            final image = _selectedImages[index];
+            final XFile image = _selectedImages[index];
+
             return Stack(
               alignment: Alignment.topRight,
               children: [
@@ -105,14 +104,32 @@ class _ScreenAddState extends State<ScreenAdd> {
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
                   ),
-                  child: Image.file(
-                    width: 200,
-                    height: 200,
-                    File(image.path),
-                    fit: BoxFit.cover,
-                  ),
+                  child: found.kIsWeb ||
+                          ![TargetPlatform.android, TargetPlatform.iOS]
+                              .contains(found.defaultTargetPlatform)
+                      ? FutureBuilder<found.Uint8List>(
+                          future: image.readAsBytes(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Image.memory(
+                                snapshot.data!,
+                                width: double.infinity,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              );
+                            } else if (snapshot.hasError) {
+                              return Icon(Icons.error);
+                            }
+                            return Center(child: CircularProgressIndicator());
+                          },
+                        )
+                      : Image.file(
+                          File(image.path),
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
                 ),
-                // Кнопка удаления
                 IconButton(
                   onPressed: () {
                     setState(() {
@@ -135,7 +152,6 @@ class _ScreenAddState extends State<ScreenAdd> {
             final picker = ImagePicker();
             final pickedFiles =
                 await picker.pickMultiImage(); // множественный выбор
-
             if (pickedFiles.isNotEmpty) {
               setState(() {
                 _selectedImages.addAll(pickedFiles);
@@ -151,7 +167,6 @@ class _ScreenAddState extends State<ScreenAdd> {
             ),
             child: Center(
               child: Text(
-                textAlign: TextAlign.end,
                 'Загрузить фотографию',
                 style: TextStyle(color: Colors.white),
               ),
@@ -249,15 +264,13 @@ class _ScreenAddState extends State<ScreenAdd> {
     return TextButton(
       onPressed: () async {
         final int imageCount = _selectedImages.length;
-        
+
         if (_selectedCategory == null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Выберите категорию')),
           );
           return;
         }
-        // 🔑 Создаем ключ для доступа к состоянию диалога
-        final key = GlobalKey<UploadProgressDialogState>();
 
         // Показываем диалог с прогрессом
         showGeneralDialog(
@@ -265,7 +278,7 @@ class _ScreenAddState extends State<ScreenAdd> {
           barrierDismissible: false,
           transitionDuration: Duration(milliseconds: 200),
           pageBuilder: (_, __, ___) => UploadProgressDialog(
-            key: key,
+            key: progressKey,
             totalImages: imageCount,
           ),
         );
@@ -275,23 +288,40 @@ class _ScreenAddState extends State<ScreenAdd> {
           await Future.delayed(Duration(milliseconds: 100));
 
           final newsRef = FirebaseFirestore.instance.collection('news').doc();
-
+          final userProvider =
+              Provider.of<UserProvider>(context, listen: false);
           await newsRef.set({
             'title': _titleController.text,
             'id_category': _selectedCategory!.id,
             'content': _contentController.text,
             'createdAt': FieldValue.serverTimestamp(),
+            'authorId': userProvider.userId ?? '',
+            'authorName': userProvider.userFullName,
+            'authorEmail':userProvider.userEmail,
+            'commentCount': 0,
+            'viewCount': 0,
+            'publishedAt': FieldValue.serverTimestamp(),
+            'status': 'pending',
           });
 
-          key.currentState?.incrementProgress("Новость создана");
+          progressKey.currentState?.incrementProgress("Новость создана");
 
-          for (int i = 0; i < _selectedImages.length; i++) {
-            final imageUrl =
-                await _storageRepository.uploadImageAdd(_selectedImages[i]);
-            await newsRef.collection('images').add({'image': imageUrl});
-            key.currentState
-                ?.incrementProgress("Загрузка $i из ${_selectedImages.length}");
-          }
+         // Загружаем изображения
+        for (int i = 0; i < _selectedImages.length; i++) {
+          final XFile image = _selectedImages[i];
+          final bytes = await image.readAsBytes(); // Читаем байты сразу
+          
+          final imageUrl = await _storageRepository.uploadImageMoblie(
+            imageBytes: bytes,
+            userId: userProvider.userId!,
+            fileName: '${DateTime.now().millisecondsSinceEpoch}_image_$i.jpg',
+          );
+          
+          await newsRef.collection('images').add({'image': imageUrl});
+          progressKey.currentState?.incrementProgress(
+            "Загрузка $i из ${_selectedImages.length}");
+        }
+            
 
           Navigator.pop(context); // Закрыть диалог
           ScaffoldMessenger.of(context).showSnackBar(
