@@ -1,140 +1,93 @@
 import 'package:flutter/material.dart';
 import 'package:news_portal/components/news_card.dart';
-import 'package:news_portal/fonts/fonts.dart';
 import 'package:news_portal/models/model_news.dart';
-import 'package:news_portal/providers/category_provider.dart';
-import 'package:news_portal/repositories/categories.dart';
 import 'package:news_portal/repositories/news.dart';
-import 'package:provider/provider.dart';
+
+enum SortOption {
+  newest,   // Сначала новые
+  oldest,   // Сначала старые
+  mostViews, // Больше просмотров
+  leastViews, // Меньше просмотров
+}
 
 class NewsStream extends StatefulWidget {
-  final NewsRepository _repositoryNews;
+  final NewsRepository repositoryNews;
   final String? selectedCategoryId;
-  final String searchQuery; // <-- Новое поле
+  final String? searchQuery;
+  final SortOption sortOption;
+  final bool isAscending;
 
   const NewsStream({
     super.key,
-    required NewsRepository repositoryNews,
-    required this.selectedCategoryId,
-    this.searchQuery = '',
-  }) : _repositoryNews = repositoryNews;
+    required this.repositoryNews,
+    this.selectedCategoryId,
+    this.searchQuery,
+    this.sortOption = SortOption.newest,
+    this.isAscending = false,
+  });
 
   @override
   State<NewsStream> createState() => _NewsStreamState();
 }
 
 class _NewsStreamState extends State<NewsStream> {
+  Stream<List<News>> newsStream = const Stream.empty();
+
   @override
-  Widget build(BuildContext context) {
-    final categoryRepo = Provider.of<CategoryProvider>(context).repository;
+  void initState() {
+    super.initState();
+    newsStream = _buildNewsStream();
+  }
 
-    return StreamBuilder<List<News>>(
-      stream: widget._repositoryNews
-          .getNewsStream(categoryId: widget.selectedCategoryId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List<News> newsList = snapshot.data!;
-          newsList = _applyFilters(newsList);
-          // Фильтрация новостей по выбранной категории
-          // Проверка на пустой список новостей
-          if (newsList.isEmpty) {
-            return SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(), // Разрешаем прокрутку
-              child: Container(
-                alignment: Alignment.center,
-                height: MediaQuery.of(context).size.height, // Высота экрана
-                child: Text(
-                  'Новостей с выбранной категорией нет',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: AppFonts.nunitoFontFamily,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
-          }
-          return FutureBuilder<List<Map<String, dynamic>>>(
-            future: _fetchNewsWithCategoryNames(newsList, categoryRepo),
-            builder: (context, categorySnapshot) {
-              if (categorySnapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (categorySnapshot.hasError) {
-                return Center(child: Text('Ошибка: ${categorySnapshot.error}'));
-              } else {
-                final newsWithCategories = categorySnapshot.data!;
-                return ListView.builder(
+  @override
+  void didUpdateWidget(covariant NewsStream oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+    // Пересоздаем поток только при изменении ключевых параметров
+    if (oldWidget.selectedCategoryId != widget.selectedCategoryId ||
+        oldWidget.searchQuery != widget.searchQuery ||
+        oldWidget.sortOption != widget.sortOption ||
+        oldWidget.isAscending != widget.isAscending) {
+      newsStream = _buildNewsStream();
+    }
+  }
 
-                  padding: EdgeInsets.only(bottom: 60),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: newsWithCategories.length,
-                  itemBuilder: (context, index) {
-                    final newsItem = newsWithCategories[index];
-                    if ((newsItem['images'] as List<String>).isEmpty) {
-                      print(
-                          "⚠️ Новость ${newsItem['title']} не имеет изображений");
-                      return SizedBox(); // или placeholder
-                    }
-
-                    return NewsCard(
-                      key: ValueKey(newsItem['id']),
-                      title: newsItem['title'],
-                      content: newsItem['content'],
-                      newsId: newsItem['id'],
-                      nameCategory: '#${newsItem['categoryName']}',
-                      imageUrls: newsItem['images'] as List<String>,
-                    );
-                  },
-                );
-              }
-            },
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-              child: Text('Ошибка при загрузке новостей: ${snapshot.error}'));
-        } else {
-          return Center(child: CircularProgressIndicator());
-        }
-      },
+  /// Создает поток новостей с учетом всех фильтров и сортировок
+  Stream<List<News>> _buildNewsStream() {
+    return widget.repositoryNews.getNewsStreamWithImages(
+      categoryId: widget.selectedCategoryId,
+      searchQuery: widget.searchQuery,
+      sortOption: widget.sortOption,
+      isAscending: widget.isAscending,
     );
   }
 
-  // Метод для загрузки новостей с именами категорий
-  Future<List<Map<String, dynamic>>> _fetchNewsWithCategoryNames(
-      List<News> newsList, CategoriesRepository categoriesRepo) async {
-    final newsWithCategories = <Map<String, dynamic>>[];
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<News>>(
+      stream: newsStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    for (final news in newsList) {
-      final categoryName = await news.getCategoryName(categoriesRepo);
+        if (snapshot.hasError) {
+          return Center(child: Text("Ошибка загрузки: ${snapshot.error}"));
+        }
 
-      newsWithCategories.add({
-        'id': news.id,
-        'title': news.title,
-        'content': news.content,
-        'categoryName': categoryName,
-        'images': news.images,
-      });
-    }
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text("Новостей нет"));
+        }
 
-    return newsWithCategories;
+        final List<News> newsList = snapshot.data!;
+
+        return ListView.builder(
+          itemCount: newsList.length,
+          itemBuilder: (context, index) {
+            return NewsCard(news: newsList[index]);
+          },
+        );
+      },
+    );
   }
-  List<News> _applyFilters(List<News> newsList) {
-  if (widget.selectedCategoryId != null && widget.selectedCategoryId!.isNotEmpty) {
-    newsList = newsList.where((n) => n.categoryId == widget.selectedCategoryId).toList();
-  }
-
-  if (widget.searchQuery.isNotEmpty) {
-    final lowerQuery = widget.searchQuery.toLowerCase();
-    newsList = newsList
-        .where((n) => n.title.toLowerCase().contains(lowerQuery) || 
-              n.content.toLowerCase().contains(lowerQuery))
-        .toList();
-  }
-
-  return newsList;
 }
-}
-
-
