@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:news_portal/components/nav_bar.dart';
 import 'package:news_portal/components/top_bar.dart';
 import 'package:news_portal/const/colors.dart';
 import 'package:news_portal/providers/user_provider.dart';
 import 'package:news_portal/repositories/user.dart';
-import 'package:news_portal/screens/screen_news_main.dart';
 import 'package:news_portal/screens/screen_regisrty.dart';
 import 'package:provider/provider.dart';
 
@@ -20,13 +20,11 @@ class _ScreenAuthState extends State<ScreenAuth> {
 
   void _onSearchSubmitted(String value) {
     if (value.isNotEmpty) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MainScreen(
-            searchQuery: value.toLowerCase(), // ← Передаём поисковый запрос
-          ),
-        ),
+      context.goNamed(
+        'mobile-news',
+        queryParameters: {
+          'searchQuery': value,
+        },
       );
     }
   }
@@ -37,34 +35,30 @@ class _ScreenAuthState extends State<ScreenAuth> {
 
   final UserRepository _userRepository = UserRepository();
   // Экземпляр репозитория
-Future<void> _signIn(BuildContext context) async {
-  final userProvider = Provider.of<UserProvider>(context, listen: false);
+  Future<void> _signIn(BuildContext context) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-  try {
-    // Вход по email/password
-    await _userRepository.signInWithEmailAndPassword(
-      _emailController.text.trim(),
-      _passwordController.text.trim(),
-    );
+    try {
+      // Вход по email/password
+      await _userRepository.signInWithEmailAndPassword(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
 
-    // Загружаем полные данные пользователя из Firestore
-    await userProvider.loadCurrentUser();
+      // Загружаем полные данные пользователя из Firestore
+      await userProvider.loadCurrentUser();
 
-    // Теперь мы знаем роль пользователя
-    if (userProvider.isModerator) {
-      
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => MainScreen()),
+      // Теперь мы знаем роль пользователя
+      if (userProvider.isModerator) {
+      } else {
+        context.go('/profile');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка входа: $e')),
       );
     }
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Ошибка входа: $e')),
-    );
   }
-}
 
   bool _isPasswordVisible = false;
 
@@ -93,7 +87,7 @@ Future<void> _signIn(BuildContext context) async {
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 20),
-                  Container(
+                  SizedBox(
                     width: 340,
                     height: 140,
                     child: Column(
@@ -174,7 +168,7 @@ Future<void> _signIn(BuildContext context) async {
                             MaterialPageRoute(
                                 builder: (context) => ScreenRegistry()));
                       },
-                      child: Container(
+                      child: SizedBox(
                         width: 158,
                         child: Center(
                           child: Row(
