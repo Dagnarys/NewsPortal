@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:news_portal/components/category_bar.dart';
 import 'package:news_portal/components/filter_button.dart';
 import 'package:news_portal/components/nav_bar.dart';
@@ -16,20 +17,39 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final NewsRepository repositoryNews = NewsRepository();
+  SortOption _sortOption = SortOption.newest;
+  bool _isAscending = false;
+  late final NewsRepository repositoryNews;
   late final TextEditingController _searchController;
-  String _searchQuery = '';
+  late String _searchQuery;
   @override
   void initState() {
     super.initState();
+    repositoryNews = NewsRepository();
     _searchController = TextEditingController(text: widget.searchQuery);
-    _searchQuery = widget.searchQuery ?? '';
+    _searchQuery = widget.searchQuery!;
+    print("Полученный selectedCategoryId: ${widget.selectedCategoryId}");
+    print("Полученный searchQuery: ${widget.searchQuery}");
+  }
+  void _updateSortOption(SortOption option, bool isAscending) {
+  setState(() {
+    _sortOption = option;
+    _isAscending = isAscending;
+  });
+}
+  @override
+  void didUpdateWidget(covariant MainScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.searchQuery != widget.searchQuery) {
+      _searchQuery = widget.searchQuery ?? '';
+      _searchController.text = _searchQuery;
+    }
   }
 
   void _onSearchSubmitted(String value) {
-    setState(() {
-      _searchQuery = value.toLowerCase();
-    });
+    if (value.isNotEmpty) {
+      context.pushNamed('mobile-news', queryParameters: {'searchQuery': value});
+    }
   }
 
   @override
@@ -40,7 +60,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final NewsRepository repositoryNews = NewsRepository();
+    print("Категория: ${widget.selectedCategoryId}"); // ← выводит ID
+    print("Search Query: ${widget.searchQuery}");
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(children: [
@@ -68,34 +89,26 @@ class _MainScreenState extends State<MainScreen> {
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: () async {
-                    // Сбрасываем категорию (опционально)
-                    if (widget.selectedCategoryId != null) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => MainScreen()),
-                      );
-                    }
-                    // Обновляем данные
                     await repositoryNews.refreshData();
                   },
                   child: NewsStream(
+                    sortOption: _sortOption,
+                    isAscending: _isAscending,
                     repositoryNews: repositoryNews,
                     selectedCategoryId: widget.selectedCategoryId,
                     searchQuery: _searchQuery,
                   ),
                 ),
-              ),
+              )
 
               //пространство для заполнения карточек с новостью
               //нижняя панель навигации
             ],
           ),
         ),
-        FilterButton(),
+        FilterButton(onSortSelected: _updateSortOption),
         const NavBar(),
       ]),
     );
   }
 }
-
-
