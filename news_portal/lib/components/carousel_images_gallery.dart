@@ -30,6 +30,31 @@ class _CarouselImagesState extends State<CarouselImages> {
 
   @override
   Widget build(BuildContext context) {
+      // Если только одно изображение — показываем его без PageView
+  if (widget.imageUrls.isEmpty) {
+    print('пусто');
+    return SizedBox.shrink(); // или Container с сообщением "Нет изображений"
+  }
+  
+  if (widget.imageUrls.length == 1) {
+    return GestureDetector(
+      onTap: () => _openFullScreen(0),
+      child: Center(
+        child: Image.network(
+          widget.imageUrls[0],
+          fit: BoxFit.cover,
+          width: 350,
+          
+          height: 183,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Center(child: CircularProgressIndicator());
+          },
+          errorBuilder: (_, __, ___) => Icon(Icons.error_outline),
+        ),
+      ),
+    );
+  }
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
