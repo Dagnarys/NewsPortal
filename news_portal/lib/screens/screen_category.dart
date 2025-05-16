@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:news_portal/components/list_category.dart';
 import 'package:news_portal/components/nav_bar.dart';
 import 'package:news_portal/components/top_bar.dart';
-import 'package:news_portal/screens/screen_news_main.dart';
 
 class ScreenCategory extends StatefulWidget {
   const ScreenCategory({super.key});
@@ -16,16 +16,10 @@ class _ScreenCategoryState extends State<ScreenCategory> {
 
   void _onSearchSubmitted(String value) {
     if (value.isNotEmpty) {
-      Navigator.pushAndRemoveUntil(
-        
-        context,
-        MaterialPageRoute(
-          builder: (context) => MainScreen(
-            searchQuery: value.toLowerCase(), // ← Передаём поисковый запрос
-          ),
-        ),
-        (route) => false,
-      );
+      context.pushNamed(
+              'mobile-news',
+              queryParameters:  {'searchQuery': value,},
+            );
     }
   }
 
