@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:news_portal/providers/user_provider.dart';
-import 'package:news_portal/screens/screen_add.dart';
-import 'package:news_portal/screens/screen_auth.dart';
-import 'package:news_portal/screens/screen_news_main.dart';
-import 'package:news_portal/screens/screen_profile.dart';
 import 'package:provider/provider.dart';
 
 class NavBar extends StatefulWidget {
@@ -36,6 +33,7 @@ class _NavBarState extends State<NavBar> {
     return Padding(
       padding: const EdgeInsets.only(left: 40),
       child: Align(
+        widthFactor: 74,
         alignment: Alignment.centerLeft,
         child: Container(
           width: 74,
@@ -44,9 +42,8 @@ class _NavBarState extends State<NavBar> {
             boxShadow: [
               BoxShadow(
                 color: Colors.black,
-                spreadRadius: 2,
-                blurRadius: 10,
-                offset: Offset(4, 4),
+                blurRadius: 11,
+                offset: Offset(0, 4),
               ),
             ],
             color: Colors.white,
@@ -57,15 +54,21 @@ class _NavBarState extends State<NavBar> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.go('/web-news');
+                },
                 icon: SvgPicture.asset('assets/svg/news.svg'),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.goNamed('pending-news');
+                },
                 icon: SvgPicture.asset('assets/svg/list.svg'),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.go('/web-profile');
+                },
                 icon: SvgPicture.asset('assets/svg/profile.svg'),
               ),
             ],
@@ -99,30 +102,19 @@ class _NavBarState extends State<NavBar> {
             children: [
               IconButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainScreen()),
-                  );
+                  context.goNamed('mobile-news');
                 },
                 icon: SvgPicture.asset('assets/svg/news.svg'),
               ),
               IconButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ScreenAdd()),
-                    // (route) => false,
-                  );
+                  context.push('/add');
                 },
                 icon: SvgPicture.asset('assets/svg/add.svg'),
               ),
               IconButton(
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => ScreenProfile()),
-                    (route) => false,
-                  );
+                  context.go('/profile');
                 },
                 icon: SvgPicture.asset('assets/svg/profile.svg'),
               ),
@@ -155,23 +147,16 @@ class _NavBarState extends State<NavBar> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              
               IconButton(
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainScreen()),
-                    (route) => false,
-                  );
+                  context.go('/');
                 },
                 icon: SvgPicture.asset('assets/svg/news.svg'),
               ),
               IconButton(
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => ScreenAuth()),
-                    (route) => false,
-                  );
+                  context.go('/auth');
                 },
                 icon: SvgPicture.asset('assets/svg/profile.svg'),
               ),
