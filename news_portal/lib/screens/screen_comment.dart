@@ -13,8 +13,8 @@ import 'package:provider/provider.dart';
 
 class ScreenComment extends StatefulWidget {
   final String newsId; // Принимаем ID новости
-
-  const ScreenComment({super.key, required this.newsId});
+  final String title;
+  const ScreenComment({super.key, required this.newsId, required this.title});
 
   @override
   State<ScreenComment> createState() => _ScreenCommentState();
@@ -93,7 +93,7 @@ final newComment = Comment(
               child: Text(
                 textAlign: TextAlign.center,
                 maxLines: 2,
-                'Инженер - это множественное число', // Можно заменить на динамический текст
+                widget.title, // Можно заменить на динамический текст
                 style: TextStyle(
                   fontFamily: AppFonts.nunitoFontFamily,
                   fontWeight: FontWeight.w600,
