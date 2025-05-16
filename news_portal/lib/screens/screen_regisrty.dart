@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:news_portal/components/nav_bar.dart';
 import 'package:news_portal/components/top_bar.dart';
 import 'package:news_portal/const/colors.dart';
 import 'package:news_portal/fonts/fonts.dart';
 import 'package:news_portal/repositories/user.dart';
-import 'package:news_portal/screens/screen_auth.dart';
-import 'package:news_portal/screens/screen_news_main.dart';
 import 'package:ru_phone_formatter/ru_phone_formatter.dart';
 
 class ScreenRegistry extends StatefulWidget {
@@ -18,14 +17,7 @@ class _ScreenRegistryState extends State<ScreenRegistry> {
 
   void _onSearchSubmitted(String value) {
     if (value.isNotEmpty) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MainScreen(
-            searchQuery: value.toLowerCase(), // ← Передаём поисковый запрос
-          ),
-        ),
-      );
+      context.go('/',extra: {'categoryId':null,'searchQuery':value.toLowerCase()});
     }
   }
 
@@ -58,12 +50,9 @@ class _ScreenRegistryState extends State<ScreenRegistry> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Регистрация успешна!')),
       );
-
+      context.go('/auth');
       // Переход на экран авторизации
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => ScreenAuth()),
-      );
+      
     } catch (e) {
       // Обработка ошибок
       ScaffoldMessenger.of(context).showSnackBar(
