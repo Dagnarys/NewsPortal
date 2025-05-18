@@ -50,7 +50,7 @@ class _ScreenRegistryState extends State<ScreenRegistry> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Регистрация успешна!')),
       );
-      context.go('/auth');
+      context.go('/profile');
       // Переход на экран авторизации
       
     } catch (e) {
