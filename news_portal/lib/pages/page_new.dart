@@ -46,7 +46,12 @@ class _PageNewState extends State<PageNew> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-
+    if (_currentNews == null) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
         backgroundColor: Colors.white,
         body: Container(
