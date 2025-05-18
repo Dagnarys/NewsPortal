@@ -48,7 +48,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void _onSearchSubmitted(String value) {
     if (value.isNotEmpty) {
-      context.pushNamed('mobile-news', queryParameters: {'searchQuery': value});
+      context.goNamed('mobile-news', queryParameters: {'searchQuery': value});
     }
   }
 
