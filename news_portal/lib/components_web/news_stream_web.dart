@@ -20,7 +20,7 @@ class NewsStreamWeb extends StatefulWidget {
 }
 
 class _NewsStreamState extends State<NewsStreamWeb> {
-  late final Stream<List<News>> newsStream;
+  late  Stream<List<News>> newsStream;
 
   @override
   void initState() {
