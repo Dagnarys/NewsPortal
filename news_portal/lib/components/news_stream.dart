@@ -61,30 +61,68 @@ class _NewsStreamState extends State<NewsStream> {
       isAscending: widget.isAscending,
     );
   }
+    List<News> _applyContentFilter(List<News> newsList) {
+    if (widget.searchQuery == null || widget.searchQuery!.trim().isEmpty) {
+      return newsList; // возвращаем все новости, если запрос пустой
+    }
 
+    final lowerQuery = widget.searchQuery!.toLowerCase().trim();
+    return newsList
+        .where((news) => news.content.toLowerCase().contains(lowerQuery))
+        .toList();
+  }
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<News>>(
-      stream: newsStream,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+        stream: newsStream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
 
-        if (snapshot.hasError) {
-          return Center(child: Text("Ошибка загрузки: ${snapshot.error}"));
-        }
+          if (snapshot.hasError) {
+            return Center(child: Text("Ошибка загрузки: ${snapshot.error}"));
+          }
 
-        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text("Новостей нет"));
-        }
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text("Новостей нет"));
+          }
 
-        final List<News> newsList = snapshot.data!;
+          final List<News> allNews = snapshot.data!;
+          print("Все новости: $allNews");
+
+          // Фильтрация по категории
+          List<News> filteredByCategory = allNews;
+          if (widget.selectedCategoryId != null &&
+              widget.selectedCategoryId!.isNotEmpty) {
+            filteredByCategory = allNews
+                .where((news) => news.categoryId == widget.selectedCategoryId)
+                .toList();
+
+            print("После фильтрации по категории: $filteredByCategory");
+          }
+
+          // Фильтрация по поисковому запросу
+          List<News> filteredNews = _applyContentFilter(filteredByCategory);
+          print("После фильтрации по запросу: $filteredNews");
+
+          if (filteredNews.isEmpty) {
+            // Показываем специальное сообщение только при активных фильтрах
+            if (widget.selectedCategoryId != null ||
+                (widget.searchQuery?.isNotEmpty ?? false)) {
+              return Center(
+                  child: Text("Новостей по вашему запросу не найдено"));
+            } else {
+              return Center(child: Text("Новостей нет"));
+            }
+          }
+
+
 
         return ListView.builder(
-          itemCount: newsList.length,
+          itemCount: filteredNews.length,
           itemBuilder: (context, index) {
-            return NewsCard(news: newsList[index]);
+            return NewsCard(news: filteredNews[index]);
           },
         );
       },
