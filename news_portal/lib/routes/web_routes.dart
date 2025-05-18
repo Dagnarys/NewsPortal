@@ -1,5 +1,6 @@
 // routes/web_routes.dart
 
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:news_portal/pages/page_auth.dart';
 import 'package:news_portal/pages/page_check.dart';
@@ -40,7 +41,7 @@ final List<RouteBase> webRoutes = [
           path: '/:id',
           name: 'web-news-detail',
           builder: (context, state) {
-            final String newsId = state.pathParameters['id']!;
+            final String newsId = state.pathParameters['id']??'';
             print("Получен ID: $newsId");
             return PageNew(newsId: newsId);
           },
