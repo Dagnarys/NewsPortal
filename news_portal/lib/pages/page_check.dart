@@ -56,15 +56,19 @@ class _CheckNewsPageState extends State<CheckNewsPage> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-
+    if (_currentNews == null) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
         backgroundColor: Colors.white,
         body: Container(
           margin: EdgeInsets.all(15),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(16)),
-            border: GradientBoxBorder(gradient: AppColors.primaryGradient)
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(16)),
+              border: GradientBoxBorder(gradient: AppColors.primaryGradient)),
           child: Stack(children: [
             NavBar(),
             // Поисковая панель
@@ -133,8 +137,8 @@ class _CheckNewsPageState extends State<CheckNewsPage> {
                   decoration: BoxDecoration(
                       borderRadius:
                           BorderRadius.vertical(top: Radius.circular(16)),
-                      border:
-                          GradientBoxBorder(gradient: AppColors.primaryGradient)),
+                      border: GradientBoxBorder(
+                          gradient: AppColors.primaryGradient)),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -154,7 +158,8 @@ class _CheckNewsPageState extends State<CheckNewsPage> {
                               Stack(
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10),
                                     alignment: Alignment.center,
                                     child: Text(
                                       _currentNews!.content,
@@ -169,7 +174,8 @@ class _CheckNewsPageState extends State<CheckNewsPage> {
                               child: Column(
                             children: [
                               SizedBox(height: 16),
-                              CarouselImagesWeb(imageUrls: _currentNews!.imageUrls),
+                              CarouselImagesWeb(
+                                  imageUrls: _currentNews!.imageUrls),
                               SizedBox(height: 35),
                             ],
                           )),
